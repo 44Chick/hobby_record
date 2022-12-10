@@ -1,5 +1,3 @@
-// src/App.js
-
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { __getcontents } from "../redux/modules/contentsSlice";
@@ -9,7 +7,6 @@ import { __getcontents } from "../redux/modules/contentsSlice";
 const List = () => {
   const dispatch = useDispatch();
   const { isLoading, error, contents } = useSelector((state) => state.contents);
-  console.log(isLoading, error, contents)
 
   useEffect(() => {
     dispatch(__getcontents());
@@ -26,7 +23,12 @@ const List = () => {
   return (
     <div>
       {contents.map((content) => (
-        <div key={content.content_id}>{content.content_title}</div>
+        <div key={content.content_id}>
+          <h3>{content.content_title}</h3>
+          <div>{content.content_body}</div>
+          <a href={content.content_link}>Link</a>
+          <div>{content.content_date}</div>
+        </div>
       ))}
     </div>
   );

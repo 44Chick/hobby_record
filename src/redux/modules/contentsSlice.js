@@ -1,5 +1,3 @@
-// src/redux/modules/contentsSlice.js
-
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
