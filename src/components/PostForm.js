@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 
 function PostForm(){
@@ -8,6 +9,7 @@ function PostForm(){
     content_genre: "",
     content_link: "",
     content_date: "",
+
     })
   
   
