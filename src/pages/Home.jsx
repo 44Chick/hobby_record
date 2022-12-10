@@ -1,4 +1,5 @@
 import React from "react";
+import List from "../components/List";
 
 
 function Home(){
@@ -6,6 +7,7 @@ function Home(){
   return(
     <div>
       <h1>Home</h1>
+      <List />
     </div>
   )
 }
