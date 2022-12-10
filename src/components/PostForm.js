@@ -1,32 +1,33 @@
-import React, { useState } from "react"
 
-function PostForm() {
+import React, { useState } from "react";
+
+function PostForm(){
   const [content, setContent] = useState({
-    content_title: "",
+    content_title : "",
     content_body: "",
     content_author: "",
     content_genre: "",
     content_link: "",
     content_date: "",
-  })
 
-  return (
+    })
+  
+  
+  return(
     <div>
       FORM
       <form method="post">
-        <input
+        <input 
           required
-          type="text"
-          value={content.content_title}
+          type="text" 
+          value={content.content_title} 
           maxLength="15"
           onChange={}
-          placeholder="제목 입력"
-        ></input>
-        <textarea
+          placeholder="제목 입력"></input>
+        <textarea 
           required
           value={content.content_body}
-          placeholder="내용 입력"
-        ></textarea>
+          placeholder="내용 입력"></textarea>
         <input type="text" value={content.content_author}></input>
         <select name="genre">
           <option value="book">도서</option>
@@ -39,4 +40,4 @@ function PostForm() {
   )
 }
 
-export default PostForm
+export default PostForm;
