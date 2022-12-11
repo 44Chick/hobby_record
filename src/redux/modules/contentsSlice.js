@@ -13,8 +13,8 @@ export const __getcontents = createAsyncThunk(
   "contents",
   async (payload, thunkAPI) => {
     try {
-      const data = await axios.get(DB);
-      console.log(data);
+      const data = await axios.get(`${DB}/contents`);
+      console.log(data, payload);
       return thunkAPI.fulfillWithValue(data.data)
     } catch (error) {
       console.log(error);
@@ -26,7 +26,12 @@ export const __getcontents = createAsyncThunk(
 export const contentsSlice = createSlice({
   name: "contents",
   initialState,
-  reducers: {},    
+  reducers: {
+    addContent: (state, action) => {
+      console.log(state, action)
+      return null
+    }
+  },    
   extraReducers: {
     [__getcontents.pending]: (state) => {
       state.isLoading = true; // 네트워크 요청이 시작되면 로딩상태를 true로 변경합니다.
@@ -42,5 +47,5 @@ export const contentsSlice = createSlice({
   }
 });
 
-export const { } = contentsSlice.actions;
+export const { addContent } = contentsSlice.actions;
 export default contentsSlice.reducer;
