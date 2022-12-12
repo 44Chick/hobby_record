@@ -67,7 +67,10 @@ const ReplyForm = () => {
         {replys?.map((reply) => (
           <div key={reply.id}>
             {reply.id}, {reply.body}
-            <button type="button" onClick={()=>onClickDeleteReplyHandler(reply.id)}>
+            <button
+              type="button"
+              onClick={() => onClickDeleteReplyHandler(reply.id)}
+            >
               삭제하기
             </button>
           </div>
