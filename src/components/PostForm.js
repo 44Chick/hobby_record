@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -26,7 +27,6 @@ function PostForm() {
     content_genre: "장르",
     content_link: "",
     content_date: "",
-    id : 0
   })
 
 
@@ -43,6 +43,7 @@ function PostForm() {
 
   return (
     <div >
+
       FORM
       <form className="wrapper" method="post" onSubmit={onAddHandler}>
         <input
