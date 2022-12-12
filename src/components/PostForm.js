@@ -1,10 +1,23 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import { addContent } from "../redux/modules/contentsSlice";
+
 import "./PostForm.css"
 
+function getFormatDate(){
+  const date = new Date();
+  var year = date.getFullYear();              //yyyy
+  var month = (1 + date.getMonth());          //M
+  month = month >= 10 ? month : '0' + month;  //month 두자리로 저장
+  var day = date.getDate();                   //d
+  day = day >= 10 ? day : '0' + day;          //day 두자리로 저장
+  return  year + '-' + month + '-' + day;       //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+}
 
 function PostForm() {
+  const {id} = useParams();
+  console.log(id)
   const dispatch = useDispatch();
   const [content, setContent] = useState({
     content_title: "",
@@ -13,24 +26,25 @@ function PostForm() {
     content_genre: "장르",
     content_link: "",
     content_date: "",
+    id : 0
   })
+
 
   const changeInput = (e) => {
     const { name, value } = e.target;
     setContent({ ...content, [name]: value })
-    console.log(name, value)
   }
 
   const onAddHandler = (e) => {
     e.preventDefault();
-    content.content_date = new Date().getDate();
+    content.content_date = getFormatDate();
     dispatch(addContent({...content}));
   };
 
   return (
-    <div className="wrapper">
+    <div >
       FORM
-      <form method="post" onSubmit={onAddHandler}>
+      <form className="wrapper" method="post" onSubmit={onAddHandler}>
         <input
           required
           type="text"
