@@ -4,16 +4,15 @@ import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import styled from "styled-components"
 import { __getcontents } from "../redux/modules/contentsSlice"
+import { DB } from "../redux/modules/contentsSlice"
+import Button from "../components/Button"
 
 function Detail() {
   const [content, setContent] = useState([])
   const dispatch = useDispatch()
   const { contents, isLoading, error } = useSelector((state) => state.contents)
   const fetchContent = async () => {
-    /* const { data } = await axios.get(
-      "https://test-json-server-six.vercel.app/contents"
-    ) */
-    const { data } = await axios.get("http://localhost:3001/contents")
+    const { data } = await axios.get(`${DB}/contents`)
     setContent(data)
   }
 
@@ -24,33 +23,53 @@ function Detail() {
 
   const param = useParams()
   const detailContent = contents?.find((ctt) => ctt.id === parseInt(param.id))
+  // const detailReply = replys?.find((rep) => rep.content_id === parseInt(param.id))
   if (isLoading) {
-    return <div>감상하는 중...</div>
+    return (
+      <StDetailWrapper>
+        <StDetail>
+          <p>감상하는 중...</p>
+        </StDetail>
+      </StDetailWrapper>
+    )
   }
 
   if (error) {
-    return <div>{error.message}</div>
+    return (
+      <StDetailWrapper>
+        <StDetail>{error.message}</StDetail>
+      </StDetailWrapper>
+    )
   }
+
   return (
     // 옵셔널체이닝 떼지 말 것!!!
-    <StDetailWrapper>
+    <>
       <h1>상세 페이지</h1>
-      <StDetail key={detailContent?.id}>
-        <button type="button">수정하기</button>
-        <h3>{detailContent?.content_title}</h3>
-        <p>{detailContent?.content_body}</p>
-        <span>{detailContent?.content_link}</span>
-        <h4>작성자: {detailContent?.content_author}</h4>
-        <h4>작성일: {detailContent?.content_date}</h4>
-      </StDetail>
-      <div>댓글란</div>
-    </StDetailWrapper>
+      <StDetailWrapper>
+        <Button onClick={() => console.log(detailContent?.content_title)}>
+          수정하기
+        </Button>
+        <StDetail>
+          <h3>
+            {detailContent?.content_title}
+            <br />- - -
+          </h3>
+          <p>{detailContent?.content_body}</p>
+          <span>{detailContent?.content_link}</span>
+          <h4>작성자: {detailContent?.content_author}</h4>
+          <h4>작성일: {detailContent?.content_date}</h4>
+        </StDetail>
+        <div>댓글란</div>
+      </StDetailWrapper>
+    </>
   )
 }
 
 export default Detail
 
 const StDetailWrapper = styled.div`
+  position: relative;
   width: 98%;
   display: flex;
   align-items: center;
@@ -63,7 +82,9 @@ const StDetailWrapper = styled.div`
     text-align: right;
   }
   button {
-    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 `
 
