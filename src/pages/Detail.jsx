@@ -1,41 +1,49 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import styled from "styled-components"
+import { __getcontents } from "../redux/modules/contentsSlice"
 
 function Detail() {
-  const [contents, setContents] = useState(null)
-
+  const [content, setContent] = useState([])
+  const dispatch = useDispatch()
+  const { contents, isLoading, error } = useSelector((state) => state.contents)
   const fetchContent = async () => {
-    const { data } = await axios.get(
+    /* const { data } = await axios.get(
       "https://test-json-server-six.vercel.app/contents"
-    )
-    setContents(data)
+    ) */
+    const { data } = await axios.get("http://localhost:3001/contents")
+    setContent(data)
   }
 
-  const param = useParams()
-
   useEffect(() => {
-    fetchContent()
-  }, [])
+    // fetchContent()
+    dispatch(__getcontents())
+  }, [dispatch])
 
+  const param = useParams()
+  const detailContent = contents?.find((ctt) => ctt.id === parseInt(param.id))
+  if (isLoading) {
+    return <div>감상하는 중...</div>
+  }
+
+  if (error) {
+    return <div>{error.message}</div>
+  }
   return (
-    // DB 들어오나 테스트
+    // 옵셔널체이닝 떼지 말 것!!!
     <StDetailWrapper>
       <h1>상세 페이지</h1>
-      {contents?.map((detail) => (
-        <>
-          <StDetail id={detail.content_id}>
-            <button type="button">수정하기</button>
-            <h3>{detail.content_title}</h3>
-            <p>{detail.content_body}</p>
-            <span>{detail.content_link}</span>
-            <h4>작성자: {detail.content_author}</h4>
-            <h4>작성일: {detail.content_date}</h4>
-          </StDetail>
-          <div>댓글 입력란</div>
-        </>
-      ))}
+      <StDetail key={detailContent?.id}>
+        <button type="button">수정하기</button>
+        <h3>{detailContent?.content_title}</h3>
+        <p>{detailContent?.content_body}</p>
+        <span>{detailContent?.content_link}</span>
+        <h4>작성자: {detailContent?.content_author}</h4>
+        <h4>작성일: {detailContent?.content_date}</h4>
+      </StDetail>
+      <div>댓글란</div>
     </StDetailWrapper>
   )
 }
