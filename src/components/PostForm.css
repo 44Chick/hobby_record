@@ -1,0 +1,22 @@
+.wrapper{
+  width: 1200px;
+  align-content: center;
+  margin: auto;
+  display: grid;
+  grid-template-columns: 500px 500px ;
+  grid-template-rows: 100px 100px ;
+}
+
+.input-title{
+  height: 50px;
+  
+}
+
+.form-box{
+  width: 1200px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
