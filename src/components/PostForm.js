@@ -45,7 +45,7 @@ function PostForm() {
     <div >
 
       FORM
-      <form className="wrapper" method="post" onSubmit={onAddHandler}>
+      <form className="form-box" method="post" onSubmit={onAddHandler}>
         <input
           required
           type="text"

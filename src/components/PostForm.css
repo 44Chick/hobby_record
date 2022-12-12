@@ -11,3 +11,12 @@
   height: 50px;
   
 }
+
+.form-box{
+  width: 1200px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
