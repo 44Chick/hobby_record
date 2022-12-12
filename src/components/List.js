@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { __getcontents, delContent} from "../redux/modules/contentsSlice";
 
 import styled from "styled-components";
+import Button from "./Button";
 
 const List = () => {
   const dispatch = useDispatch();
@@ -35,7 +36,7 @@ const List = () => {
           <div>{content.content_body}</div>
           <a href={content.content_link}>Link</a>
           <div>{content.content_date}</div>
-          <button onClick={() => delHandler(content.id)}>Delete</button>
+          <Button onClick={() => delHandler(content.id)}>Delete</Button>
         </Cards>
       ))}
     </CardsBox>

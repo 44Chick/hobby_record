@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import List from "../components/List";
 
 import styled from "styled-components";
+import Button from "../components/Button";
 
 function Home(){
   return(
     <HomeWrap>
       <h1>Home</h1>
-      <Link to="/posting"><CreateBtn>Create</CreateBtn></Link>
+      <Link to="/posting"><Button>Create</Button></Link>
       <List />
     </HomeWrap>
   )

@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const DB = process.env.React_APP_DBSERVER
+export const DB = process.env.React_APP_DBSERVER
 
 const initialState = {
   contents: [],

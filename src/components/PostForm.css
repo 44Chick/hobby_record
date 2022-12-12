@@ -1,15 +1,29 @@
 .wrapper{
-  width: 1200px;
+  width: 800px;
   align-content: center;
   margin: auto;
   display: grid;
-  grid-template-columns: 500px 500px ;
-  grid-template-rows: 100px 100px ;
+  gap: 20px;
 }
 
-.input-title{
+.input-half{
   height: 50px;
-  
+  width: 250px;
+  padding: 10px;
+}
+
+.dropdown{
+  width: 100px;
+}
+
+.input-area{
+  height: 300px;
+  padding: 10px;
+}
+
+.wrap-inline{
+  display: flex;
+  justify-content: space-between;
 }
 
 .form-box{
