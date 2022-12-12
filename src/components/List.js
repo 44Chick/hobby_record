@@ -1,13 +1,17 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { __getcontents } from "../redux/modules/contentsSlice";
+import { __getcontents, delContent} from "../redux/modules/contentsSlice";
 
 import styled from "styled-components";
 
 const List = () => {
   const dispatch = useDispatch();
   const { isLoading, error, contents } = useSelector((state) => state.contents);
+
+  const delHandler = (del_id) =>{
+    dispatch(delContent(del_id));
+  }
 
   useEffect(() => {
     dispatch(__getcontents());
@@ -31,6 +35,7 @@ const List = () => {
           <div>{content.content_body}</div>
           <a href={content.content_link}>Link</a>
           <div>{content.content_date}</div>
+          <button onClick={() => delHandler(content.id)}>Delete</button>
         </Cards>
       ))}
     </CardsBox>
@@ -67,9 +72,9 @@ const CardTitle = styled.div`
 
 const Cards = styled.div`
   box-shadow: 0px 0px 15px 15px ${themeColor[0]};
-  min-width: 275px;
-  max-width: 275px;
-  height: 120px;
+  min-width: 320px;
+  max-width: 320px;
+  height: 200px;
   border-radius: 10px;
   align-items: center;
   justify-content: center;
