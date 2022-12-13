@@ -6,6 +6,7 @@ import styled from "styled-components"
 import { __getcontents } from "../redux/modules/contentsSlice"
 import { DB } from "../redux/modules/contentsSlice"
 import Button from "../components/Button"
+import ReplyForm from "../components/ReplyForm"
 
 function Detail() {
   const [content, setContent] = useState([])
@@ -62,6 +63,7 @@ function Detail() {
         </StDetail>
         <div>댓글란</div>
       </StDetailWrapper>
+        <ReplyForm />
     </>
   )
 }
