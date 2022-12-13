@@ -6,6 +6,7 @@ import styled from "styled-components"
 import { __getcontents } from "../redux/modules/contentsSlice"
 import { DB } from "../redux/modules/contentsSlice"
 import Button from "../components/Button"
+import ReplyForm from "../components/ReplyForm"
 import FormInput from "../components/FormInput"
 
 function Detail() {
