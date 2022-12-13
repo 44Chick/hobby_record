@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createAsyncThunk, createSlice, current } from "@reduxjs/toolkit"
+import axios from "axios"
 
 export const DB = process.env.React_APP_DBSERVER
 
@@ -8,7 +8,7 @@ const initialState = {
   isLoading: false,
   error: null,
   content: {},
-};
+}
 
 export const __getcontents = createAsyncThunk(
   "contents",
@@ -28,13 +28,17 @@ export const contentsSlice = createSlice({
   initialState,
   reducers: {
     addContent: (state, action) => {
-      console.log(state);
-      axios.post("http://localhost:3001/contents", action.payload);
+      // console.log(state)
+      axios.post(`${DB}/contents`, action.payload)
     },
     delContent: (state, action) => {
-      axios.delete(`http://localhost:3001/contents/${action.payload}`);
-      console.log(current(state.contents), action);
-      state.contents = state.contents.filter((v) => v.id !== action.payload);
+      axios.delete(`${DB}/contents/${action.payload}`)
+      // console.log(current(state.contents), action)
+      state.contents = state.contents.filter((v) => v.id !== action.payload)
+    },
+    updateContent: (state, action) => {
+      axios.patch(`${DB}/contents/${action.payload}`)
+      state.contents = action.payload
     },
   },
   extraReducers: {
@@ -62,7 +66,7 @@ export const contentsSlice = createSlice({
     //   state.error = action.payload; // catch 된 error 객체를 state.error에 넣습니다.
     // },
   },
-});
+})
 
-export const { addContent, delContent } = contentsSlice.actions;
-export default contentsSlice.reducer;
+export const { addContent, delContent, updateContent } = contentsSlice.actions
+export default contentsSlice.reducer

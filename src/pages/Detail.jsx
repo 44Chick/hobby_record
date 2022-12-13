@@ -3,10 +3,10 @@ import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import styled from "styled-components"
-import { __getcontents } from "../redux/modules/contentsSlice"
+import { __getcontents, updateContent } from "../redux/modules/contentsSlice"
 import { DB } from "../redux/modules/contentsSlice"
 import Button from "../components/Button"
-import ReplyForm from "../components/ReplyForm"
+// import ReplyForm from "../components/ReplyForm"
 import FormInput from "../components/FormInput"
 
 function Detail() {
@@ -22,30 +22,27 @@ function Detail() {
   })
   const dispatch = useDispatch()
   const { contents, isLoading, error } = useSelector((state) => state.contents)
-  /* const fetchContent = async () => {
-    const { data } = await axios.get(`${DB}/contents`)
-    setContent(data)
-  } */
-
-  useEffect(() => {
-    // fetchContent()
-    fetchActualDetail()
-    dispatch(__getcontents())
-  }, [dispatch])
-
   const param = useParams()
+
   const fetchActualDetail = async () => {
     const { data } = await axios.get(`${DB}/contents/${parseInt(param.id)}`)
     setContent(data)
   }
+
   const detailContent = contents?.find((ctt) => ctt.id === parseInt(param.id))
 
   const onClickEditButton = async (contentId, edit) => {
     await axios.patch(`${DB}/contents/${contentId}`, edit)
-    // setContent({})
     fetchActualDetail()
   }
 
+  useEffect(() => {
+    dispatch(__getcontents())
+  }, [dispatch])
+
+  useEffect(() => {
+    fetchActualDetail()
+  }, [])
   // const detailReply = replys?.find((rep) => rep.content_id === parseInt(param.id))
   if (isLoading) {
     return (
@@ -64,15 +61,15 @@ function Detail() {
       </StDetailWrapper>
     )
   }
-
+  // console.log(`local: ${content.content_title}`)
+  // console.log(`DB: ${detailContent?.content_title}`)
   if (renderStatus) {
     return (
-      // 옵셔널체이닝 떼지 말 것!!!
       <>
-        <h1>상세 페이지</h1>
         <StDetailWrapper>
-          <Button onClick={() => setRenderStatus(false)}>수정</Button>
+          <h1>상세 페이지</h1>
           <StDetail>
+            <Button onClick={() => setRenderStatus(false)}>수정</Button>
             <h3>
               {detailContent?.content_title}
               <br />- - -
@@ -89,30 +86,31 @@ function Detail() {
   } else {
     return (
       <>
-        <h1>상세 페이지</h1>
         <StDetailWrapper>
+          <h1>상세 페이지</h1>
           <form
             onSubmit={(e) => {
               e.preventDefault()
+              dispatch(updateContent({ content }))
+              // fetchActualDetail()
             }}
           >
-            <Button
-              onClick={() => {
-                onClickEditButton(parseInt(param.id), "test")
-                setRenderStatus(true)
-                console.log(content)
-              }}
-            >
-              확인
-            </Button>
             <StDetail>
+              <Button
+                onClick={() => {
+                  setContent({ content })
+                  onClickEditButton(parseInt(param.id), content)
+                  setRenderStatus(true)
+                  fetchActualDetail()
+                }}
+              >
+                확인
+              </Button>
               <h3>
                 <FormInput
-                  defaultValue={detailContent?.content_title}
+                  defaultValue={content.content_title}
                   onChange={(e) => {
-                    //setEditContent
-                    // ...editContent / title:e.target.value
-                    setContent({ ...content, title: e.target.value })
+                    setContent({ ...content, content_title: e.target.value })
                   }}
                 />
                 <br />- - -
@@ -120,17 +118,32 @@ function Detail() {
               <p>
                 내용
                 <br />
-                <FormInput defaultValue={detailContent?.content_body} />
+                <FormInput
+                  defaultValue={content.content_body}
+                  onChange={(e) => {
+                    setContent({ ...content, content_body: e.target.value })
+                  }}
+                />
               </p>
               <span>
                 링크
                 <br />
-                <FormInput defaultValue={detailContent?.content_link} />
+                <FormInput
+                  defaultValue={content.content_link}
+                  onChange={(e) => {
+                    setContent({ ...content, content_link: e.target.value })
+                  }}
+                />
               </span>
               <h4>
                 작성자:
                 <br />
-                <FormInput defaultValue={detailContent?.content_author} />
+                <FormInput
+                  defaultValue={content.content_author}
+                  onChange={(e) => {
+                    setContent({ ...content, content_author: e.target.value })
+                  }}
+                />
               </h4>
               <h4>작성일: {detailContent?.content_date}</h4>
             </StDetail>
@@ -145,27 +158,26 @@ function Detail() {
 export default Detail
 
 const StDetailWrapper = styled.div`
-  position: relative;
+  /* position: relative; */
   width: 98%;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  h3 {
-    text-align: center;
-  }
+  text-align: center;
   h4 {
     text-align: right;
   }
+`
+
+const StDetail = styled.div`
+  position: relative;
+  max-width: 1200px;
+  min-width: 600px;
+  border: 4px solid pink;
   button {
     position: absolute;
     top: 0;
     right: 0;
   }
-`
-
-const StDetail = styled.div`
-  max-width: 1200px;
-  min-width: 600px;
-  border: 4px solid pink;
 `
