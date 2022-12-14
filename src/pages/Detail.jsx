@@ -50,6 +50,10 @@ function Detail() {
     // dispatch(delContent(contentId))
   }
 
+  /*   const onDeleteHandler = async (e) => {
+    await dispatch(delContent2()) // extraReducer
+  } */
+
   useEffect(() => {
     fetchActualDetail()
     dispatch(__getcontents())
@@ -79,27 +83,30 @@ function Detail() {
         <StDetailWrapper>
           <h1>상세 페이지</h1>
           <StDetail>
-            <div className="buttonWrapper">
-              <Button onClick={() => setRenderStatus(false)}>수정</Button>
-              <Button
-                onClick={() => {
-                  if (!window.confirm("삭제하시겠습니까?")) {
-                    // 취소(아니오) 버튼 클릭 시 이벤트
-                    return
-                  } else {
-                    // 확인(예) 버튼 클릭 시 이벤트
-                    setContent(null)
-                    dispatch(delContent2(pageId))
-                    // onClickDelete(pageId)
-                    // fetchActualDetail()
-                    navigate("/") // 리렌더 안 됨
-                    // console.log(content.id, detailContent?.id)
-                  }
-                }}
-              >
-                삭제
-              </Button>
-            </div>
+            <span>
+              작성일: {detailContent?.content_date}
+              <div className="buttonWrapper">
+                <Button onClick={() => setRenderStatus(false)}>수정</Button>
+                <Button
+                  onClick={() => {
+                    if (!window.confirm("삭제하시겠습니까?")) {
+                      // 취소(아니오) 버튼 클릭 시 이벤트
+                      return
+                    } else {
+                      // 확인(예) 버튼 클릭 시 이벤트
+                      setContent(null)
+                      dispatch(delContent2(pageId))
+                      // onClickDelete(pageId)
+                      // fetchActualDetail()
+                      navigate("/") // 리렌더 안 됨
+                      // console.log(content.id, detailContent?.id)
+                    }
+                  }}
+                >
+                  삭제
+                </Button>
+              </div>
+            </span>
             <h3>
               {content.content_title}
               <br />- - -
@@ -109,14 +116,8 @@ function Detail() {
               <br />
               {content.content_link}
             </span>
-
             <p>{content.content_body}</p>
-
-            <h4>
-              작성자: {content.content_author}
-              <br />
-              작성일: {detailContent?.content_date}
-            </h4>
+            <h4>작성자: {content.content_author}</h4>
           </StDetail>
           <div>댓글란</div>
         </StDetailWrapper>
@@ -136,12 +137,15 @@ function Detail() {
           >
             <StDetail>
               <div className="buttonWrapper">
+                <span>{detailContent?.content_date}</span>
                 <Button
                   onClick={() => {
                     if (content.content_title.trim() === "") {
-                      alert("제목을 채워주세요.")
+                      alert("제목을 적어주세요.")
                     } else if (content.content_body.trim() === "") {
-                      alert("내용을 채워주세요.")
+                      alert("내용을 적어주세요.")
+                    } else if (content.content_author.trim() === "") {
+                      alert("작성자명을 적어주세요.")
                     } else {
                       setContent({ content })
                       onClickEditButton(pageId, content)
@@ -163,8 +167,6 @@ function Detail() {
                 <br />- - -
               </h3>
               <p>
-                내용
-                <br />
                 <textarea
                   defaultValue={content.content_body}
                   onChange={(e) => {
@@ -173,41 +175,38 @@ function Detail() {
                 />
               </p>
               <span>
-                링크
-                <br />
+                링크:
                 <FormInput
                   defaultValue={content.content_link}
                   onChange={(e) => {
                     setContent({ ...content, content_link: e.target.value })
                   }}
                 />
+                &nbsp;
+                <label name="genre">장르: </label>
+                <select
+                  name="content_genre"
+                  onChange={(e) => {
+                    setContent({ ...content, content_genre: e.target.value })
+                  }}
+                  defaultValue={content.content_genre}
+                >
+                  <option>도서</option>
+                  <option>영화</option>
+                  <option>음악</option>
+                  <option>기타</option>
+                </select>
               </span>
-              <label name="genre">장르: </label>
-              <select
-                name="content_genre"
-                onChange={(e) => {
-                  setContent({ ...content, content_genre: e.target.value })
-                }}
-                defaultValue={content.content_genre}
-              >
-                <option>도서</option>
-                <option>영화</option>
-                <option>음악</option>
-                <option>기타</option>
-              </select>
 
               <h4>
-                작성자:
-                <br />
+                {/* 작성자명 */}
                 <FormInput
-                  required
                   defaultValue={content.content_author}
                   onChange={(e) => {
                     setContent({ ...content, content_author: e.target.value })
                   }}
                 />
               </h4>
-              <h4>작성일: {detailContent?.content_date}</h4>
             </StDetail>
           </form>
           <div>댓글란</div>
@@ -223,9 +222,6 @@ const StDetailWrapper = styled.div`
   ${({ theme }) => theme.common.flexCenterColumn}
   width: 98%;
   text-align: center;
-  h4 {
-    text-align: right;
-  }
 `
 
 const StDetail = styled.div`
@@ -233,15 +229,28 @@ const StDetail = styled.div`
   flex-direction: column;
   max-width: 1200px;
   min-width: 600px;
-  border: 4px solid pink;
+  border: 4px solid ${({ theme }) => theme.azur.deep};
+  border-radius: 16px;
   .buttonWrapper {
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
   }
   p {
     white-space: pre-line;
   }
   span {
     font-size: small;
+    ${({ theme }) => theme.common.flexCenterColumn}
+    flex-direction:row;
+  }
+  textarea {
+    width: 50%;
+    height: 200px;
+    ${({ theme }) => theme.common.inputs}
+  }
+  select {
+    width: fit-content;
+    height: 40px;
+    ${({ theme }) => theme.common.inputs};
   }
 `

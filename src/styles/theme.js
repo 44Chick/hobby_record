@@ -10,9 +10,11 @@ const azur = {
 // input / textarea / select
 const common = {
   inputs: `
-  height: 40px;
   border: 1px solid ${azur.deep};
   border-radius: 16px;
+  :focus {
+    outline: 2px solid ${azur.deep};
+  }
   `,
 
   flexCenterColumn: `

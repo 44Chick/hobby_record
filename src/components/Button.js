@@ -1,6 +1,5 @@
 import React from "react"
-import styled, { ThemeProvider } from "styled-components"
-import theme from "../styles/theme"
+import styled from "styled-components"
 
 const StButton = styled.button`
   border: 2px solid ${({ theme }) => theme.azur.deep};
@@ -17,23 +16,12 @@ const StButton = styled.button`
     color: ${({ theme }) => theme.azur.deep};
   }
 `
-StButton.defaultProps = {
-  theme: {
-    main: "#7F7FD5",
-  },
-}
 
 const Button = (props) => {
   return (
-    <ThemeProvider theme={theme}>
-      <StButton
-        type="button"
-        className={props.className}
-        onClick={props.onClick}
-      >
-        {props.children}
-      </StButton>
-    </ThemeProvider>
+    <StButton type="button" className={props.className} onClick={props.onClick}>
+      {props.children}
+    </StButton>
   )
 }
 
