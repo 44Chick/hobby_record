@@ -40,6 +40,13 @@ export const contentsSlice = createSlice({
       axios.patch(`${DB}/contents/${action.payload}`)
       state.contents = action.payload
     },
+    delContent2: (state, action) => {
+      axios.delete(`${DB}/contents/${action.payload}`)
+      state.contents = state.contents.filter((v) => v.id !== action.payload)
+
+      console.log(current(state).contents)
+      state.contents = current(state).contents
+    },
   },
   extraReducers: {
     [__getcontents.pending]: (state) => {
@@ -68,5 +75,6 @@ export const contentsSlice = createSlice({
   },
 })
 
-export const { addContent, delContent, updateContent } = contentsSlice.actions
+export const { addContent, delContent, delContent2, updateContent } =
+  contentsSlice.actions
 export default contentsSlice.reducer

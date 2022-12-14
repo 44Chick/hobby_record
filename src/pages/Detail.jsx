@@ -6,12 +6,13 @@ import styled from "styled-components"
 import {
   __getcontents,
   updateContent,
-  delContent,
+  delContent2,
 } from "../redux/modules/contentsSlice"
 import { DB } from "../redux/modules/contentsSlice"
 import Button from "../components/Button"
-// import ReplyForm from "../components/ReplyForm"
 import FormInput from "../components/FormInput"
+// import useInput from "../hooks/useInput"
+// import ReplyForm from "../components/ReplyForm"
 
 function Detail() {
   // 상세페이지 보기 상태(true)인지 수정 상태(false)인지 결정
@@ -87,10 +88,11 @@ function Detail() {
                   } else {
                     // 확인(예) 버튼 클릭 시 이벤트
                     setContent(null)
-                    dispatch(delContent(pageId))
+                    dispatch(delContent2(pageId))
                     // onClickDelete(pageId)
                     // fetchActualDetail()
                     navigate("/") // 리렌더 안 됨
+                    // console.log(content.id, detailContent?.id)
                   }
                 }}
               >
