@@ -1,21 +1,22 @@
 import React from "react"
-import styled from "styled-components"
+import styled, { ThemeProvider } from "styled-components"
+import theme from "../styles/theme"
+
+const StFormInput = styled.input`
+  width: 50%;
+  ${({ theme }) => theme.common.inputs}
+`
 
 const FormInput = (props) => {
   return (
-    <StFormInput
-      type="text"
-      defaultValue={props.defaultValue}
-      onChange={props.onChange}
-    />
+    <ThemeProvider theme={theme}>
+      <StFormInput
+        type="text"
+        defaultValue={props.defaultValue}
+        onChange={props.onChange}
+      />
+    </ThemeProvider>
   )
 }
 
 export default FormInput
-
-const StFormInput = styled.input`
-  width: 80%;
-  height: 30px;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-`
