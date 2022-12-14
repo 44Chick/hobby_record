@@ -72,6 +72,7 @@ function Detail() {
             </h3>
             <p>{content.content_body}</p>
             <span>{content.content_link}</span>
+            <span>장르: {content.content_genre}</span>
             <h4>작성자: {content.content_author}</h4>
             <h4>작성일: {detailContent?.content_date}</h4>
           </StDetail>
@@ -131,6 +132,22 @@ function Detail() {
                   }}
                 />
               </span>
+              <label name="genre">장르: </label>
+              <select
+                name="content_genre"
+                required
+                onChange={(e) => {
+                  setContent({ ...content, content_genre: e.target.value })
+                }}
+                defaultValue={content.content_genre}
+              >
+                <option disabled>--선택--</option>
+                <option>도서</option>
+                <option>영화</option>
+                <option>음악</option>
+                <option>기타</option>
+              </select>
+
               <h4>
                 작성자:
                 <br />
