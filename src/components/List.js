@@ -9,9 +9,14 @@ const List = () => {
   const dispatch = useDispatch();
   const { isLoading, error, contents } = useSelector((state) => state.contents);
 
-  const delHandler = (del_id) =>{
+  const delHandler = (del_id) =>{ 
+    if (!window.confirm("삭제하시겠습니까?")) {
+    // 취소(아니오) 버튼 클릭 시 이벤트
+    return
+  } else {
+    // 확인(예) 버튼 클릭 시 이벤트
     dispatch(delContent(del_id));
-  }
+  }}
 
   useEffect(() => {
     dispatch(__getcontents());
