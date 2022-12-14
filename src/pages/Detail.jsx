@@ -7,6 +7,7 @@ import {
   __getcontents,
   updateContent,
   delContent2,
+  __delcontent,
 } from "../redux/modules/contentsSlice"
 import { DB } from "../redux/modules/contentsSlice"
 import Button from "../components/Button"
@@ -50,9 +51,11 @@ function Detail() {
     // dispatch(delContent(contentId))
   }
 
-  /*   const onDeleteHandler = async (e) => {
-    await dispatch(delContent2()) // extraReducer
-  } */
+  const onDeleteHandler = async (conId) => {
+    await dispatch(__delcontent(conId))
+    setContent({ content })
+    navigate("/")
+  }
 
   useEffect(() => {
     fetchActualDetail()
@@ -88,18 +91,13 @@ function Detail() {
               <div className="buttonWrapper">
                 <Button onClick={() => setRenderStatus(false)}>수정</Button>
                 <Button
-                  onClick={() => {
+                  onClick={(e) => {
                     if (!window.confirm("삭제하시겠습니까?")) {
                       // 취소(아니오) 버튼 클릭 시 이벤트
                       return
                     } else {
                       // 확인(예) 버튼 클릭 시 이벤트
-                      setContent(null)
-                      dispatch(delContent2(pageId))
-                      // onClickDelete(pageId)
-                      // fetchActualDetail()
-                      navigate("/") // 리렌더 안 됨
-                      // console.log(content.id, detailContent?.id)
+                      onDeleteHandler(pageId)
                     }
                   }}
                 >
