@@ -37,12 +37,10 @@ function Detail() {
   }
 
   useEffect(() => {
+    fetchActualDetail()
     dispatch(__getcontents())
   }, [dispatch])
 
-  useEffect(() => {
-    fetchActualDetail()
-  }, [])
   // const detailReply = replys?.find((rep) => rep.content_id === parseInt(param.id))
   if (isLoading) {
     return (
@@ -61,8 +59,6 @@ function Detail() {
       </StDetailWrapper>
     )
   }
-  // console.log(`local: ${content.content_title}`)
-  // console.log(`DB: ${detailContent?.content_title}`)
   if (renderStatus) {
     return (
       <>
@@ -71,12 +67,12 @@ function Detail() {
           <StDetail>
             <Button onClick={() => setRenderStatus(false)}>수정</Button>
             <h3>
-              {detailContent?.content_title}
+              {content.content_title}
               <br />- - -
             </h3>
-            <p>{detailContent?.content_body}</p>
-            <span>{detailContent?.content_link}</span>
-            <h4>작성자: {detailContent?.content_author}</h4>
+            <p>{content.content_body}</p>
+            <span>{content.content_link}</span>
+            <h4>작성자: {content.content_author}</h4>
             <h4>작성일: {detailContent?.content_date}</h4>
           </StDetail>
           <div>댓글란</div>
@@ -91,7 +87,7 @@ function Detail() {
           <form
             onSubmit={(e) => {
               e.preventDefault()
-              dispatch(updateContent({ content }))
+              // dispatch(updateContent({ content }))
               // fetchActualDetail()
             }}
           >
