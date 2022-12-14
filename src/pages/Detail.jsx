@@ -1,9 +1,13 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
+import { Link, useNavigate, useParams } from "react-router-dom"
 import styled from "styled-components"
-import { __getcontents, updateContent } from "../redux/modules/contentsSlice"
+import {
+  __getcontents,
+  updateContent,
+  delContent,
+} from "../redux/modules/contentsSlice"
 import { DB } from "../redux/modules/contentsSlice"
 import Button from "../components/Button"
 // import ReplyForm from "../components/ReplyForm"
@@ -23,17 +27,25 @@ function Detail() {
   const dispatch = useDispatch()
   const { contents, isLoading, error } = useSelector((state) => state.contents)
   const param = useParams()
+  const navigate = useNavigate()
+  const pageId = parseInt(param.id)
 
   const fetchActualDetail = async () => {
-    const { data } = await axios.get(`${DB}/contents/${parseInt(param.id)}`)
+    const { data } = await axios.get(`${DB}/contents/${pageId}`)
     setContent(data)
   }
 
-  const detailContent = contents?.find((ctt) => ctt.id === parseInt(param.id))
+  const detailContent = contents?.find((ctt) => ctt.id === pageId)
 
   const onClickEditButton = async (contentId, edit) => {
     await axios.patch(`${DB}/contents/${contentId}`, edit)
     fetchActualDetail()
+  }
+
+  const onClickDelete = async (contentId) => {
+    await axios.delete(`${DB}/contents/${contentId}`)
+    fetchActualDetail()
+    // dispatch(delContent(contentId))
   }
 
   useEffect(() => {
@@ -41,7 +53,7 @@ function Detail() {
     dispatch(__getcontents())
   }, [dispatch])
 
-  // const detailReply = replys?.find((rep) => rep.content_id === parseInt(param.id))
+  // const detailReply = replys?.find((rep) => rep.content_id === pageId)
   if (isLoading) {
     return (
       <StDetailWrapper>
@@ -65,16 +77,43 @@ function Detail() {
         <StDetailWrapper>
           <h1>상세 페이지</h1>
           <StDetail>
-            <Button onClick={() => setRenderStatus(false)}>수정</Button>
+            <div className="buttonWrapper">
+              <Button onClick={() => setRenderStatus(false)}>수정</Button>
+              <Button
+                onClick={() => {
+                  if (!window.confirm("삭제하시겠습니까?")) {
+                    // 취소(아니오) 버튼 클릭 시 이벤트
+                    return
+                  } else {
+                    // 확인(예) 버튼 클릭 시 이벤트
+                    setContent(null)
+                    dispatch(delContent(pageId))
+                    // onClickDelete(pageId)
+                    // fetchActualDetail()
+                    navigate("/") // 리렌더 안 됨
+                  }
+                }}
+              >
+                삭제
+              </Button>
+            </div>
             <h3>
               {content.content_title}
               <br />- - -
             </h3>
+            <span>
+              장르: {content.content_genre}
+              <br />
+              {content.content_link}
+            </span>
+
             <p>{content.content_body}</p>
-            <span>{content.content_link}</span>
-            <span>장르: {content.content_genre}</span>
-            <h4>작성자: {content.content_author}</h4>
-            <h4>작성일: {detailContent?.content_date}</h4>
+
+            <h4>
+              작성자: {content.content_author}
+              <br />
+              작성일: {detailContent?.content_date}
+            </h4>
           </StDetail>
           <div>댓글란</div>
         </StDetailWrapper>
@@ -93,16 +132,24 @@ function Detail() {
             }}
           >
             <StDetail>
-              <Button
-                onClick={() => {
-                  setContent({ content })
-                  onClickEditButton(parseInt(param.id), content)
-                  setRenderStatus(true)
-                  fetchActualDetail()
-                }}
-              >
-                확인
-              </Button>
+              <div className="buttonWrapper">
+                <Button
+                  onClick={() => {
+                    if (content.content_title.trim() === "") {
+                      alert("제목을 채워주세요.")
+                    } else if (content.content_body.trim() === "") {
+                      alert("내용을 채워주세요.")
+                    } else {
+                      setContent({ content })
+                      onClickEditButton(pageId, content)
+                      setRenderStatus(true)
+                      fetchActualDetail()
+                    }
+                  }}
+                >
+                  확인
+                </Button>
+              </div>
               <h3>
                 <FormInput
                   defaultValue={content.content_title}
@@ -115,7 +162,7 @@ function Detail() {
               <p>
                 내용
                 <br />
-                <FormInput
+                <textarea
                   defaultValue={content.content_body}
                   onChange={(e) => {
                     setContent({ ...content, content_body: e.target.value })
@@ -135,13 +182,11 @@ function Detail() {
               <label name="genre">장르: </label>
               <select
                 name="content_genre"
-                required
                 onChange={(e) => {
                   setContent({ ...content, content_genre: e.target.value })
                 }}
                 defaultValue={content.content_genre}
               >
-                <option disabled>--선택--</option>
                 <option>도서</option>
                 <option>영화</option>
                 <option>음악</option>
@@ -152,6 +197,7 @@ function Detail() {
                 작성자:
                 <br />
                 <FormInput
+                  required
                   defaultValue={content.content_author}
                   onChange={(e) => {
                     setContent({ ...content, content_author: e.target.value })
@@ -171,7 +217,6 @@ function Detail() {
 export default Detail
 
 const StDetailWrapper = styled.div`
-  /* position: relative; */
   width: 98%;
   display: flex;
   align-items: center;
@@ -184,13 +229,19 @@ const StDetailWrapper = styled.div`
 `
 
 const StDetail = styled.div`
-  position: relative;
+  display: flex;
+  flex-direction: column;
   max-width: 1200px;
   min-width: 600px;
   border: 4px solid pink;
-  button {
-    position: absolute;
-    top: 0;
-    right: 0;
+  .buttonWrapper {
+    display: flex;
+    justify-content: flex-end;
+  }
+  p {
+    white-space: pre-line;
+  }
+  span {
+    font-size: small;
   }
 `
