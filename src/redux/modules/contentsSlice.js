@@ -8,7 +8,7 @@ const initialState = {
   isLoading: false,
   error: null,
   content: {},
-  msg:"",
+  msg: "",
 }
 
 export const __getcontents = createAsyncThunk(
@@ -35,6 +35,17 @@ export const __addcontents = createAsyncThunk(
   }
 )
 
+export const __delcontent = createAsyncThunk(
+  "content/del",
+  async (payload, thunkAPI) => {
+    try {
+      await axios.delete(`${DB}/contents/${payload}`)
+      return thunkAPI.fulfillWithValue("success")
+    } catch (error) {
+      return thunkAPI.rejectWithValue("error")
+    }
+  }
+)
 
 export const contentsSlice = createSlice({
   name: "contents",
@@ -61,7 +72,7 @@ export const contentsSlice = createSlice({
       state.contents = current(state).contents
     },
   },
-  extraReducers: (builder) =>{
+  extraReducers: (builder) => {
     // [__getcontents.pending]: (state) => {
     //   state.isLoading = true // 네트워크 요청이 시작되면 로딩상태를 true로 변경합니다.
     // },
@@ -78,25 +89,25 @@ export const contentsSlice = createSlice({
       .addCase(__getcontents.pending, (state) => {
         state.isLoading = true // 네트워크 요청이 시작되면 로딩상태를 true로 변경합니다.
       })
-      .addCase(__getcontents.fulfilled,(state, action) => {
+      .addCase(__getcontents.fulfilled, (state, action) => {
         state.isLoading = false // 네트워크 요청이 끝났으니, false로 변경합니다.
         state.contents = action.payload // Store에 있는 contents에 서버에서 가져온 contents를 넣습니다.
       })
-      .addCase(__getcontents.rejected,(state, action) => {
+      .addCase(__getcontents.rejected, (state, action) => {
         state.isLoading = false // 에러가 발생했지만, 네트워크 요청이 끝났으니, false로 변경합니다.
         state.error = action.payload // catch 된 error 객체를 state.error에 넣습니다.
       })
       // addcontents reducer
       .addCase(__addcontents.pending, (state) => {
-        state.isLoading = true 
+        state.isLoading = true
       })
-      .addCase(__addcontents.fulfilled,(state, action) => {
-        state.isLoading = false 
+      .addCase(__addcontents.fulfilled, (state, action) => {
+        state.isLoading = false
         state.msg = action.payload
       })
-      .addCase(__addcontents.rejected,(state, action) => {
-        state.isLoading = false 
-        state.msg = action.payload 
+      .addCase(__addcontents.rejected, (state, action) => {
+        state.isLoading = false
+        state.msg = action.payload
       })
   },
 })
