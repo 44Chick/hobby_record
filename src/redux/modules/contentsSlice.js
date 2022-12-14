@@ -8,10 +8,11 @@ const initialState = {
   isLoading: false,
   error: null,
   content: {},
+  msg:"",
 }
 
 export const __getcontents = createAsyncThunk(
-  "contents",
+  "contents/get",
   async (payload, thunkAPI) => {
     try {
       const data = await axios.get(`${DB}/contents`)
@@ -22,6 +23,18 @@ export const __getcontents = createAsyncThunk(
     }
   }
 )
+export const __addcontents = createAsyncThunk(
+  "contents/add",
+  async (payload, thunkAPI) => {
+    try {
+      await axios.post(`${DB}/contents`, payload)
+      return thunkAPI.fulfillWithValue("success")
+    } catch (error) {
+      return thunkAPI.rejectWithValue("error")
+    }
+  }
+)
+
 
 export const contentsSlice = createSlice({
   name: "contents",
@@ -41,30 +54,43 @@ export const contentsSlice = createSlice({
       state.contents = action.payload
     },
   },
-  extraReducers: {
-    [__getcontents.pending]: (state) => {
-      state.isLoading = true // 네트워크 요청이 시작되면 로딩상태를 true로 변경합니다.
-    },
-    [__getcontents.fulfilled]: (state, action) => {
-      state.isLoading = false // 네트워크 요청이 끝났으니, false로 변경합니다.
-      state.contents = action.payload // Store에 있는 contents에 서버에서 가져온 contents를 넣습니다.
-    },
-    [__getcontents.rejected]: (state, action) => {
-      state.isLoading = false // 에러가 발생했지만, 네트워크 요청이 끝났으니, false로 변경합니다.
-      state.error = action.payload // catch 된 error 객체를 state.error에 넣습니다.
-    },
-
-    // [__delcontents.pending]: (state) => {
-    //   state.isLoading = true; // 네트워크 요청이 시작되면 로딩상태를 true로 변경합니다.
+  extraReducers: (builder) =>{
+    // [__getcontents.pending]: (state) => {
+    //   state.isLoading = true // 네트워크 요청이 시작되면 로딩상태를 true로 변경합니다.
     // },
-    // [__delcontents.fulfilled]: (state, action) => {
-    //   state.isLoading = false; // 네트워크 요청이 끝났으니, false로 변경합니다.
-    //   state.contents = action.payload; // Store에 있는 contents에 서버에서 가져온 contents를 넣습니다.
+    // [__getcontents.fulfilled]: (state, action) => {
+    //   state.isLoading = false // 네트워크 요청이 끝났으니, false로 변경합니다.
+    //   state.contents = action.payload // Store에 있는 contents에 서버에서 가져온 contents를 넣습니다.
     // },
-    // [__delcontents.rejected]: (state, action) => {
-    //   state.isLoading = false; // 에러가 발생했지만, 네트워크 요청이 끝났으니, false로 변경합니다.
-    //   state.error = action.payload; // catch 된 error 객체를 state.error에 넣습니다.
+    // [__getcontents.rejected]: (state, action) => {
+    //   state.isLoading = false // 에러가 발생했지만, 네트워크 요청이 끝났으니, false로 변경합니다.
+    //   state.error = action.payload // catch 된 error 객체를 state.error에 넣습니다.
     // },
+    builder
+      // getcontents reducer
+      .addCase(__getcontents.pending, (state) => {
+        state.isLoading = true // 네트워크 요청이 시작되면 로딩상태를 true로 변경합니다.
+      })
+      .addCase(__getcontents.fulfilled,(state, action) => {
+        state.isLoading = false // 네트워크 요청이 끝났으니, false로 변경합니다.
+        state.contents = action.payload // Store에 있는 contents에 서버에서 가져온 contents를 넣습니다.
+      })
+      .addCase(__getcontents.rejected,(state, action) => {
+        state.isLoading = false // 에러가 발생했지만, 네트워크 요청이 끝났으니, false로 변경합니다.
+        state.error = action.payload // catch 된 error 객체를 state.error에 넣습니다.
+      })
+      // addcontents reducer
+      .addCase(__addcontents.pending, (state) => {
+        state.isLoading = true 
+      })
+      .addCase(__addcontents.fulfilled,(state, action) => {
+        state.isLoading = false 
+        state.msg = action.payload
+      })
+      .addCase(__addcontents.rejected,(state, action) => {
+        state.isLoading = false 
+        state.msg = action.payload 
+      })
   },
 })
 

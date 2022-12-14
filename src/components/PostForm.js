@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
-import { addContent } from "../redux/modules/contentsSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+import { addContent, __addcontents} from "../redux/modules/contentsSlice";
 
 import "./PostForm.css";
 
@@ -16,8 +16,8 @@ function getFormatDate() {
 }
 
 function PostForm() {
-  const { id } = useParams();
-  console.log(id);
+  const navigate = useNavigate();
+  const {error, msg} = useSelector((state)=> state.contents)
   const dispatch = useDispatch();
   const [content, setContent] = useState({
     content_title: "",
@@ -27,17 +27,35 @@ function PostForm() {
     content_link: "",
     content_date: "",
   });
-
   const changeInput = (e) => {
     const { name, value } = e.target;
     setContent({ ...content, [name]: value });
   };
 
-  const onAddHandler = (e) => {
+  const onAddHandler = async (e) => {
     e.preventDefault();
+    // if(!window.confirm("추가 하겠습니까?")){
+    //   return 
+    // } else {
+    // }
     content.content_date = getFormatDate();
-    dispatch(addContent({ ...content }));
+    await dispatch(__addcontents({ ...content }));
+    navigate("/")
   };
+  // onClick={() => {
+  //   if (!window.confirm("삭제하시겠습니까?")) {
+  //     // 취소(아니오) 버튼 클릭 시 이벤트
+  //     return
+  //   } else {
+  //     // 확인(예) 버튼 클릭 시 이벤트
+  //     setContent(null)
+  //     dispatch(delContent(pageId))
+  //     // onClickDelete(pageId)
+  //     // fetchActualDetail()
+  //     navigate("/") // 리렌더 안 됨
+  //   }
+  // }}
+  
 
   return (
     <div>
