@@ -13,6 +13,7 @@ const Input = (props) => {
       name={props.name}
       required={props.required}
       placeholder={props.placeholder}
+      defaultValue={props.defaultValue}
       type="text"
       maxLength={props.maxLength}
       className={props.className} 

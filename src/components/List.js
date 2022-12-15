@@ -68,7 +68,7 @@ const List = () => {
           <h3>{content.content_title}</h3>
           <CardsBody>{content.content_body}</CardsBody>
           <div>{content.content_author}</div>
-          <div onClick={(event)=>{linkHandler(content.content_link, event)}}>{content.content_link}</div>
+          <CardsLink onClick={(event)=>{linkHandler(content.content_link, event)}}>{content.content_link}</CardsLink>
           <div>{content.content_date}</div>
           <CardsBtn>READ MORE</CardsBtn>
         </Cards>
@@ -79,10 +79,6 @@ const List = () => {
 
 export default List;
 
-const CardsLink = styled(Link)`
-  text-decoration: none;
-`
-
 const CardsBox = styled.div`
   height: 600px;
   width: auto;
@@ -91,11 +87,13 @@ const CardsBox = styled.div`
   /* overflow: auto; */
   flex-wrap: wrap;
   overflow: auto;
-  white-space:nowrap;
   grid-template-columns: 1fr 1fr 1fr;
 `;
 
-
+const CardsLink = styled.div`
+  height: 14px;
+  text-overflow: ellipsis;
+`
 
 const CardTitle = styled.div`
   font-size: 18px;
@@ -103,6 +101,7 @@ const CardTitle = styled.div`
   color: white;
   margin-bottom: 10px;
 `;
+
 const DelBox = styled.div`
   display: flex;
   justify-content: right;
@@ -137,6 +136,11 @@ const Cards = styled.div`
 
 const CardsBody = styled.div`
   height: 200px;
+
+  overflow-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
+
 `
 
 const AweIcon = styled(FontAwesomeIcon)`
@@ -151,6 +155,7 @@ const CardsBtn = styled.button`
   background-color: ${({ theme }) => theme.azur.deep};
   color: white;
   border: none;
+
   ${Cards}:hover & {
     background: white;
     color: ${({ theme }) => theme.azur.deep};
