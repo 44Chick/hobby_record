@@ -15,7 +15,6 @@ export const __getReplys = createAsyncThunk(
     // 콜백 함수
     try {
       const data = await axios.get(`${DB}/replys`)
-      console.log(data)
       return thunkAPI.fulfillWithValue(data.data)
     } catch (error) {
       return thunkAPI.rejectWithValue(error)
@@ -23,17 +22,17 @@ export const __getReplys = createAsyncThunk(
   }
 )
 
-// export const __deleteReplys = createAsyncThunk(
-//   "delete.replys",
-//   async (payload, thunkAPI) => {
-//     try {
-//       await axios.delete(`${DB}/replys`);
-//       return thunkAPI.fulfillWithValue();
-//     } catch {
-//       return thunkAPI.rejectWithValue();
-//     }
-//   }
-// )
+export const __deleteReplys = createAsyncThunk(
+  "delete.replys",
+  async (payload, thunkAPI) => {
+    try {
+      await axios.delete(`${DB}/replys/${payload}`)
+      return thunkAPI.fulfillWithValue("success")
+    } catch {
+      return thunkAPI.rejectWithValue("error")
+    }
+  }
+)
 
 export const replysSlice = createSlice({
   name: "replys",

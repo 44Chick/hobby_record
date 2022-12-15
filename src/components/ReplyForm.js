@@ -7,10 +7,11 @@ import { addReply, __getReplys } from "../redux/modules/replysSlice"
 import { DB } from "../redux/modules/replysSlice"
 
 const ReplyForm = () => {
-  const [reply, setReply] = useState({
+  const [reply, setReply] = useState({})
+  const [oneReply, setOneReply] = useState({
     id: 0,
     reply_body: "",
-    // reply_date: new Date(),
+    reply_date: "2022-12-15",
     content_id: 0,
   })
   const dispatch = useDispatch()
@@ -18,6 +19,16 @@ const ReplyForm = () => {
   const prmId = parseInt(prm.id)
   const { isLoading, error, replys } = useSelector((state) => state.replys)
   // const detailReply = replys?.find((rep) => rep.content_id === parseInt(prm.id))
+
+  const fetchReplys = async () => {
+    const { data } = await axios.get(`${DB}/replys`)
+    setReply(data)
+  }
+
+  const fetchOneReply = async () => {
+    const { data } = await axios.get(`${DB}/replys?content_id=${prmId}`)
+    setOneReply(data)
+  }
 
   const changeReply = (event) => {
     const { name, value } = event.target
@@ -41,6 +52,8 @@ const ReplyForm = () => {
 
   useEffect(() => {
     dispatch(__getReplys())
+    fetchReplys()
+    fetchOneReply()
   }, [dispatch])
 
   if (isLoading) {
@@ -50,7 +63,8 @@ const ReplyForm = () => {
   if (error) {
     return <div>{error.message}</div>
   }
-
+  console.log(reply)
+  console.log(oneReply)
   return (
     <Stmain>
       <form onSubmit={onSubmitReplyHandler}>
@@ -64,23 +78,19 @@ const ReplyForm = () => {
         <button>저장하기</button>
       </form>
       <div>
-        {replys?.map((reply) => {
-          if (reply.content_id === prmId) {
-            //   return (
-            return (
-              <div key={reply.id}>
-                ID:{replys?.reply_id} date:{replys?.reply_date} ={" "}
-                {replys?.reply_body}
-                <button type="button">수정하기</button>
-                <button
-                  type="button"
-                  onClick={() => onClickDeleteReplyHandler(reply.id)}
-                >
-                  삭제하기
-                </button>
-              </div>
-            )
-          }
+        {replys?.map((item) => {
+          return (
+            <div key={"r" + item.id}>
+              date:{item.reply_date} = {item.reply_body}
+              {/* <button type="button">수정하기</button> */}
+              <button
+                type="button"
+                onClick={() => onClickDeleteReplyHandler(item.id)}
+              >
+                삭제하기
+              </button>
+            </div>
+          )
         })}
       </div>
     </Stmain>
