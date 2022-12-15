@@ -22,6 +22,23 @@ export const __getReplys = createAsyncThunk(
   }
 );
 
+// export const __updateReplys = createAsyncThunk(
+//   "update.replys",
+//   async (payload, thunkAPI) => {
+//     console.log(payload);
+//     const { id, ...rest } = payload;
+
+//     try {
+//       const data = await axios.patch(
+//         `${DB}/replys/${id}`,
+//         rest
+//       );
+//       return thunkAPI.fulfillWithValue(data.data);
+//     } catch (error) {
+//       return thunkAPI.rejectWithValue(error);
+//     }
+//   }
+// );
 // export const __deleteReplys = createAsyncThunk(
 //   "delete.replys",
 //   async (payload, thunkAPI) => {
@@ -54,6 +71,24 @@ export const replysSlice = createSlice({
       state.isLoading = false; // 에러가 발생했지만, 네트워크 요청이 끝났으니, false로 변경
       state.error = action.payload; // catch 된 error 객체를 state.error에 넣는다.
     },
+    // [__updateReplys.rejected]: (state, action) => {
+    //   state.isLoading = false;
+    //   state.reply = state.reply;
+    //   alert("수정에 문제가발생했습니다.");
+    // },
+    // [__updateReplys.pending]: (state) => {
+    //   state.isLoading = true;
+    // },
+    // [__updateReplys.fulfilled]: (state, action) => {
+    //   state.isLoading = false;
+    //   state.replys = state.reply.map((reply) => {
+    //     if (reply.id === action.payload.id) {
+    //       return { ...action.payload };
+    //     } else {
+    //       return reply;
+    //     }
+    //   });
+    // },
   },
 });
 

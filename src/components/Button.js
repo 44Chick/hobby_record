@@ -1,6 +1,22 @@
 import React from "react"
 import styled from "styled-components"
 
+const StButton = styled.button`
+  border: 2px solid ${({ theme }) => theme.azur.deep};
+  border-radius: 16px;
+  background-color: ${({ theme }) => theme.azur.deep};
+  color: white;
+  width: fit-content;
+  height: fit-content;
+  margin-right: 5px;
+  font-size: medium;
+  cursor: pointer;
+  :hover {
+    background-color: white;
+    color: ${({ theme }) => theme.azur.deep};
+  }
+`
+
 const Button = (props) => {
   return (
     <StButton type="button" className={props.className} onClick={props.onClick}>
@@ -10,14 +26,3 @@ const Button = (props) => {
 }
 
 export default Button
-
-const StButton = styled.button`
-  border: none;
-  border-radius: 10px;
-  background-color: teal;
-  color: white;
-  width: fit-content;
-  height: fit-content;
-  font-size: 1rem;
-  cursor: pointer;
-`

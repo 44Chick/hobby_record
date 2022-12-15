@@ -1,13 +1,21 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
-import styled from "styled-components"
-import { __getcontents } from "../redux/modules/contentsSlice"
+import { Link, useNavigate, useParams } from "react-router-dom"
+import styled, { ThemeProvider } from "styled-components"
+import ReplyForm from "../components/ReplyForm"
+import {
+  __getcontents,
+  updateContent,
+  delContent2,
+  __delcontent,
+} from "../redux/modules/contentsSlice"
 import { DB } from "../redux/modules/contentsSlice"
 import Button from "../components/Button"
-import ReplyForm from "../components/ReplyForm"
 import FormInput from "../components/FormInput"
+import theme from "../styles/theme"
+// import useInput from "../hooks/useInput"
+// import ReplyForm from "../components/ReplyForm"
 
 function Detail() {
   // 상세페이지 보기 상태(true)인지 수정 상태(false)인지 결정
@@ -22,31 +30,40 @@ function Detail() {
   })
   const dispatch = useDispatch()
   const { contents, isLoading, error } = useSelector((state) => state.contents)
-  /* const fetchContent = async () => {
-    const { data } = await axios.get(`${DB}/contents`)
+  const param = useParams()
+  const navigate = useNavigate()
+  const pageId = parseInt(param.id)
+
+  const fetchActualDetail = async () => {
+    const { data } = await axios.get(`${DB}/contents/${pageId}`)
     setContent(data)
-  } */
+  }
+
+  const detailContent = contents?.find((ctt) => ctt.id === pageId)
+
+  const onClickEditButton = async (contentId, edit) => {
+    await axios.patch(`${DB}/contents/${contentId}`, edit)
+    fetchActualDetail()
+  }
+
+  const onClickDelete = async (contentId) => {
+    await axios.delete(`${DB}/contents/${contentId}`)
+    fetchActualDetail()
+    // dispatch(delContent(contentId))
+  }
+
+  const onDeleteHandler = async (conId) => {
+    await dispatch(__delcontent(conId))
+    setContent({ content })
+    navigate("/")
+  }
 
   useEffect(() => {
-    // fetchContent()
     fetchActualDetail()
     dispatch(__getcontents())
   }, [dispatch])
 
-  const param = useParams()
-  const fetchActualDetail = async () => {
-    const { data } = await axios.get(`${DB}/contents/${parseInt(param.id)}`)
-    setContent(data)
-  }
-  const detailContent = contents?.find((ctt) => ctt.id === parseInt(param.id))
-
-  const onClickEditButton = async (contentId, edit) => {
-    await axios.patch(`${DB}/contents/${contentId}`, edit)
-    // setContent({})
-    fetchActualDetail()
-  }
-
-  // const detailReply = replys?.find((rep) => rep.content_id === parseInt(param.id))
+  // const detailReply = replys?.find((rep) => rep.content_id === pageId)
   if (isLoading) {
     return (
       <StDetailWrapper>
@@ -64,82 +81,137 @@ function Detail() {
       </StDetailWrapper>
     )
   }
-
   if (renderStatus) {
     return (
-      // 옵셔널체이닝 떼지 말 것!!!
-      <>
-        <h1>상세 페이지</h1>
+      <ThemeProvider theme={theme}>
         <StDetailWrapper>
-          <Button onClick={() => setRenderStatus(false)}>수정</Button>
+          <h1>상세 페이지</h1>
           <StDetail>
+            <span>
+              작성일: {detailContent?.content_date}
+              <div className="buttonWrapper">
+                <Button onClick={() => setRenderStatus(false)}>수정</Button>
+                <Button
+                  onClick={(e) => {
+                    if (!window.confirm("삭제하시겠습니까?")) {
+                      // 취소(아니오) 버튼 클릭 시 이벤트
+                      return
+                    } else {
+                      // 확인(예) 버튼 클릭 시 이벤트
+                      onDeleteHandler(pageId)
+                    }
+                  }}
+                >
+                  삭제
+                </Button>
+              </div>
+            </span>
             <h3>
-              {detailContent?.content_title}
+              {content.content_title}
               <br />- - -
             </h3>
-            <p>{detailContent?.content_body}</p>
-            <span>{detailContent?.content_link}</span>
-            <h4>작성자: {detailContent?.content_author}</h4>
-            <h4>작성일: {detailContent?.content_date}</h4>
+            <span>
+              장르: {content.content_genre}
+              <br />
+              {content.content_link}
+            </span>
+            <p>{content.content_body}</p>
+            <h4>작성자: {content.content_author}</h4>
           </StDetail>
           <div>댓글란</div>
           <ReplyForm />
         </StDetailWrapper>
-      </>
+      </ThemeProvider>
     )
   } else {
     return (
-      <>
-        <h1>상세 페이지</h1>
+      <ThemeProvider theme={theme}>
         <StDetailWrapper>
+          <h1>상세 페이지</h1>
           <form
             onSubmit={(e) => {
               e.preventDefault()
+              // dispatch(updateContent({ content }))
+              // fetchActualDetail()
             }}
           >
-            <Button
-              onClick={() => {
-                onClickEditButton(parseInt(param.id), "test")
-                setRenderStatus(true)
-                console.log(content)
-              }}
-            >
-              확인
-            </Button>
             <StDetail>
+              <div className="buttonWrapper">
+                <span>{detailContent?.content_date}</span>
+                <Button
+                  onClick={() => {
+                    if (content.content_title.trim() === "") {
+                      alert("제목을 적어주세요.")
+                    } else if (content.content_body.trim() === "") {
+                      alert("내용을 적어주세요.")
+                    } else if (content.content_author.trim() === "") {
+                      alert("작성자명을 적어주세요.")
+                    } else {
+                      setContent({ content })
+                      onClickEditButton(pageId, content)
+                      setRenderStatus(true)
+                      fetchActualDetail()
+                    }
+                  }}
+                >
+                  확인
+                </Button>
+              </div>
               <h3>
                 <FormInput
-                  defaultValue={detailContent?.content_title}
+                  defaultValue={content.content_title}
                   onChange={(e) => {
-                    //setEditContent
-                    // ...editContent / title:e.target.value
-                    setContent({ ...content, title: e.target.value })
+                    setContent({ ...content, content_title: e.target.value })
                   }}
                 />
                 <br />- - -
               </h3>
               <p>
-                내용
-                <br />
-                <FormInput defaultValue={detailContent?.content_body} />
+                <textarea
+                  defaultValue={content.content_body}
+                  onChange={(e) => {
+                    setContent({ ...content, content_body: e.target.value })
+                  }}
+                />
               </p>
               <span>
-                링크
-                <br />
-                <FormInput defaultValue={detailContent?.content_link} />
+                링크:
+                <FormInput
+                  defaultValue={content.content_link}
+                  onChange={(e) => {
+                    setContent({ ...content, content_link: e.target.value })
+                  }}
+                />
+                &nbsp;
+                <label name="genre">장르: </label>
+                <select
+                  name="content_genre"
+                  onChange={(e) => {
+                    setContent({ ...content, content_genre: e.target.value })
+                  }}
+                  defaultValue={content.content_genre}
+                >
+                  <option>도서</option>
+                  <option>영화</option>
+                  <option>음악</option>
+                  <option>기타</option>
+                </select>
               </span>
+
               <h4>
-                작성자:
-                <br />
-                <FormInput defaultValue={detailContent?.content_author} />
+                {/* 작성자명 */}
+                <FormInput
+                  defaultValue={content.content_author}
+                  onChange={(e) => {
+                    setContent({ ...content, content_author: e.target.value })
+                  }}
+                />
               </h4>
-              <h4>작성일: {detailContent?.content_date}</h4>
             </StDetail>
           </form>
           <div>댓글란</div>
         </StDetailWrapper>
-  
-      </>
+      </ThemeProvider>
     )
   }
 }
@@ -147,7 +219,7 @@ function Detail() {
 export default Detail
 
 const StDetailWrapper = styled.div`
-  position: relative;
+  ${({ theme }) => theme.common.flexCenterColumn}
   width: 98%;
   display: flex;
   align-items: center;
@@ -160,14 +232,39 @@ const StDetailWrapper = styled.div`
     text-align: right;
   }
   button {
-    /* position: absolute; */
+    position: absolute;
     top: 0;
     right: 0;
   }
 `
 
 const StDetail = styled.div`
+  display: flex;
+  flex-direction: column;
   max-width: 1200px;
   min-width: 600px;
-  border: 4px solid pink;
+  border: 4px solid ${({ theme }) => theme.azur.deep};
+  border-radius: 16px;
+  .buttonWrapper {
+    display: flex;
+    justify-content: space-between;
+  }
+  p {
+    white-space: pre-line;
+  }
+  span {
+    font-size: small;
+    ${({ theme }) => theme.common.flexCenterColumn}
+    flex-direction:row;
+  }
+  textarea {
+    width: 50%;
+    height: 200px;
+    ${({ theme }) => theme.common.inputs}
+  }
+  select {
+    width: fit-content;
+    height: 40px;
+    ${({ theme }) => theme.common.inputs};
+  }
 `

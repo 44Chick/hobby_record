@@ -1,10 +1,61 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useActionData, useParams } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import styled from "styled-components";
 import { DB } from "../redux/modules/contentsSlice";
-import { addReply, __getReplys } from "../redux/modules/replysSlice";
+import { addReply, __getReplys  } from "../redux/modules/replysSlice";
+
+// function ReplyArea (props) {
+//   const [replyy, setReplyy] = useState(false);
+//   const dispatch = useDispatch();
+//   const [reply, setReply] = useState ({
+//     id: props.id,
+//     reply_body: props.reply_body,
+//     reply_date: props.reply_date,
+//     content_id: props.content_id,
+//   }) 
+
+//   function updateHandler(reply) {
+//     dispatch(__updateReplys(reply));
+//   }
+
+//   if (replyy === false) {
+//     return (
+//       <Stmain>
+//         <div>{props.id}</div>
+//         <div>{props.reply_date}</div>
+//         <div>{props.reply_body}</div>
+//         <div>
+//           <button value="edit" onClick={(e)=>setReplyy(true)}>수정하기</button>
+//           <button value="delete" onClick={()=>props.onClickDeleteReplyHandler(props.id)}>삭제하기</button>
+//         </div>
+//       </Stmain>
+//     );
+//   } else {
+//     <Stmain>
+//         <div>{props.id}</div>
+//         <div>{props.reply_date}</div>
+//         <div>
+//           <textarea 
+//           defaultValue={props.reply_body} 
+//           onchange={(e)=>{
+//             const {value} = e.target;
+//             setReply({
+//               ...reply,
+//               reply: value,
+//             })
+//           }}
+//           />
+//           <button value="edit" 
+//           onClick={()=>{
+//             setReplyy(false);
+//             updateHandler(reply);
+//           }}>수정하기</button>
+//         </div>
+//       </Stmain>
+//   }
+// }
 
 function getFormatDate() {
   const date = new Date();
@@ -25,7 +76,6 @@ const ReplyForm = () => {
     reply_date: "",
     content_id: parseInt(prm.id),
   });
-
   const dispatch = useDispatch();
   const { isLoading, error, replys } = useSelector((state) => state.replys);
 
@@ -50,10 +100,6 @@ const ReplyForm = () => {
     setReply({ ...reply });
   };
 
-  // const onChangeReplyHandler = (event, replyIndex) => {
-  //   const reply
-  // }
-
   const onClickEditReplyHandler = async (replyId, edit) => {
     await axios.patch(`${DB}/replys/${replyId}`, edit);
     fetchReply();
@@ -72,7 +118,7 @@ const ReplyForm = () => {
   }
 
   return (
-    <Stmain replyRender={replyRender}>
+    <Stmain>
       {replyRender ? (
         <form onSubmit={onSubmitReplyHandler}>
           <input
@@ -161,5 +207,6 @@ const Stmain = styled.div`
   flex-direction: column;
   height: 350px;
   width: 600px;
-  border: 4px solid pink;
+  border: 4px solid ${({ theme }) => theme.azur.deep};
+  border-radius: 16px;
 `;

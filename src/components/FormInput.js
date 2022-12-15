@@ -1,6 +1,11 @@
 import React from "react"
 import styled from "styled-components"
 
+const StFormInput = styled.input`
+  width: 50%;
+  height: 40px;
+  ${({ theme }) => theme.common.inputs}
+`
 const FormInput = (props) => {
   return (
     <StFormInput
@@ -12,10 +17,3 @@ const FormInput = (props) => {
 }
 
 export default FormInput
-
-const StFormInput = styled.input`
-  width: 80%;
-  height: 30px;
-  border: 2px solid #ccc;
-  border-radius: 5px;
-`
