@@ -107,7 +107,7 @@ function Detail() {
               작성자 : {content.content_author}
             </div>
             <BtnBox style={{ gridArea: "btn" }}>
-              <DeBtn onClick={() => setRenderStatus(false)}>fix</DeBtn>
+              <DeBtn onClick={() => setRenderStatus(false)}>수정하기</DeBtn>
               <DeBtn
                 onClick={(e) => {
                   if (!window.confirm("삭제하시겠습니까?")) {
@@ -119,7 +119,7 @@ function Detail() {
                   }
                 }}
               >
-                delete
+                삭제하기
               </DeBtn>
             </BtnBox>
             <div style={{ gridArea: "date" }}>{content.content_date}</div>

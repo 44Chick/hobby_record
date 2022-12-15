@@ -6,6 +6,9 @@ import styled from "styled-components"
 import { addReply, __getReplys } from "../redux/modules/replysSlice"
 import { DB } from "../redux/modules/replysSlice"
 
+import Input from "./Input"
+import Button from "./Button"
+
 const ReplyForm = () => {
   const [reply, setReply] = useState({
     id: 0,
@@ -53,36 +56,46 @@ const ReplyForm = () => {
 
   return (
     <Stmain>
-      <form onSubmit={onSubmitReplyHandler}>
-        <input
+      <FormBox onSubmit={onSubmitReplyHandler}>
+        <ReInput
           type="text"
           name="reply_body"
           value={replys.reply_body}
           onChange={changeReply}
           placeholder="댓글을 남겨주세요"
         />
-        <button>저장하기</button>
-      </form>
-      <div>
+        <ReBtn>저장하기</ReBtn>
+      </FormBox>
+      <br />
+      <br />
+      <ReList>
         {replys?.map((reply) => {
           if (reply.content_id === prmId) {
             //   return (
             return (
               <div key={reply.id}>
-                ID:{replys?.reply_id} date:{replys?.reply_date} ={" "}
-                {replys?.reply_body}
-                <button type="button">수정하기</button>
-                <button
-                  type="button"
-                  onClick={() => onClickDeleteReplyHandler(reply.id)}
-                >
-                  삭제하기
-                </button>
+                <ReElement>
+                <div>
+                  {replys?.reply_body}
+                </div>
+                <div>
+                  <Button type="button">수정하기</Button>
+                  <Button
+                    type="button"
+                    onClick={() => onClickDeleteReplyHandler(reply.id)}
+                  >
+                    삭제하기
+                  </Button>
+                </div>
+                </ReElement>
+                <div>
+                  date:{replys?.reply_date}
+                </div>
               </div>
             )
           }
         })}
-      </div>
+      </ReList>
     </Stmain>
   )
 }
@@ -90,11 +103,49 @@ const ReplyForm = () => {
 export default ReplyForm
 
 const Stmain = styled.div`
+border-radius: 10px;
+  border: 2px solid ${({ theme }) => theme.azur.deep};
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  height: 350px;
+  width: 800px;
+  box-shadow: 12px 12px 2px 1px ${({ theme }) => theme.azur.light};
+`
+
+const FormBox = styled.form`
+  border-radius: 10px;
   width: 600px;
-  border: 4px solid pink;
+  padding: 20px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  margin: 10px;
+`
+
+const ReInput = styled(Input)`
+  width: 350px;
+`
+
+const ReBtn = styled(Button)`
+  height: 40px;
+  width: 100px;
+`
+
+const ReList = styled.div`
+  width: 600px;
+  margin:10px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
+  gap: 20px;
+`
+
+const ReElement = styled.div`
+  border-bottom:2px solid ${({ theme }) => theme.azur.deep};
+  padding: 5px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `
