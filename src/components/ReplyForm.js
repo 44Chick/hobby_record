@@ -1,12 +1,10 @@
-import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import styled from "styled-components";
-import {
-  addReply,
-  __getReplys,
-} from "../redux/modules/replysSlice";
+import axios from "axios"
+import React, { useEffect, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
+import { useParams } from "react-router-dom"
+import styled from "styled-components"
+import { addReply, __getReplys } from "../redux/modules/replysSlice"
+import { DB } from "../redux/modules/replysSlice"
 
 const ReplyForm = () => {
   const [reply, setReply] = useState({
@@ -14,42 +12,43 @@ const ReplyForm = () => {
     reply_body: "",
     // reply_date: new Date(),
     content_id: 0,
-  });
-  const dispatch = useDispatch();
-  // const prm = useParams();
-  const { isLoading, error, replys } = useSelector((state) => state.replys);
+  })
+  const dispatch = useDispatch()
+  const prm = useParams()
+  const prmId = parseInt(prm.id)
+  const { isLoading, error, replys } = useSelector((state) => state.replys)
   // const detailReply = replys?.find((rep) => rep.content_id === parseInt(prm.id))
 
   const changeReply = (event) => {
-    const { name, value } = event.target;
-    setReply({ ...reply, [name]: value });
-  };
+    const { name, value } = event.target
+    setReply({ ...reply, [name]: value })
+  }
 
   const onSubmitReplyHandler = (event) => {
-    event.preventDefault();
-    dispatch(addReply({ ...reply }));
-  };
+    event.preventDefault()
+    dispatch(addReply({ ...reply }))
+  }
 
   const onClickDeleteReplyHandler = (replyId) => {
-    axios.delete(`http://localhost:3001/replys/${replyId}`);
-    setReply({...reply});
-  };
+    axios.delete(`${DB}/replys/${replyId}`)
+    setReply({ ...reply })
+  }
 
   // const onClickEditReplyHandler = (replyId, edit) => {
-  //   axios.patch(`http://localhost:3001/replys/${replyId}`, edit);
+  //   axios.patch(`${DB}/replys/${replyId}`, edit);
   //   setReply([...reply]); // 페이지내에서 변경할수 있도록
   // };
 
   useEffect(() => {
-    dispatch(__getReplys());
-  }, [dispatch]);
+    dispatch(__getReplys())
+  }, [dispatch])
 
   if (isLoading) {
-    return <div>로딩중입니다.</div>;
+    return <div>로딩중입니다.</div>
   }
 
   if (error) {
-    return <div>{error.message}</div>;
+    return <div>{error.message}</div>
   }
 
   return (
@@ -63,25 +62,32 @@ const ReplyForm = () => {
           placeholder="댓글을 남겨주세요"
         />
         <button>저장하기</button>
-      </form> 
+      </form>
       <div>
         {replys?.map((reply) => {
-          // if(reply.content_id === id) {
-          //   return (
-            <div key={reply.id}>
-            ID:{replys?.reply_id} date:{replys?.reply_date} = {replys?.reply_body}
-            <button type="button">수정하기</button>
-            <button type="button" onClick={() => onClickDeleteReplyHandler(reply.id)}>
-              삭제하기
-            </button>
-            </div>
+          if (reply.content_id === prmId) {
+            //   return (
+            return (
+              <div key={reply.id}>
+                ID:{replys?.reply_id} date:{replys?.reply_date} ={" "}
+                {replys?.reply_body}
+                <button type="button">수정하기</button>
+                <button
+                  type="button"
+                  onClick={() => onClickDeleteReplyHandler(reply.id)}
+                >
+                  삭제하기
+                </button>
+              </div>
+            )
+          }
         })}
       </div>
     </Stmain>
-  );
-};
+  )
+}
 
-export default ReplyForm;
+export default ReplyForm
 
 const Stmain = styled.div`
   display: flex;
