@@ -1,10 +1,10 @@
 // src/redux/config/configStore.js
 
-import { configureStore } from "@reduxjs/toolkit";
+import { configureStore } from "@reduxjs/toolkit"
 /**
  * import 해온 것은 slice.reducer 입니다.
  */
-import contents from "../modules/contentsSlice";
+import contents from "../modules/contentsSlice"
 import replys from "../modules/replysSlice"
 // import todos from "../modules/todosSlice";
 
@@ -16,8 +16,8 @@ import replys from "../modules/replysSlice"
  * 이것을 각각 모듈로 구현한 다음에 아래 코드로 2개의 모듈을 스토어에 연결해준 것 입니다.
  */
 const store = configureStore({
-  reducer: { contents:contents, replys:replys },
+  reducer: { contents: contents, replys: replys },
+  devTools: process.env.NODE_ENV === "production",
+})
 
-});
-
-export default store;
+export default store
