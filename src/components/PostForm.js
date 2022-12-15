@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { addContent, __addcontents} from "../redux/modules/contentsSlice";
@@ -16,6 +16,7 @@ function getFormatDate() {
 }
 
 function PostForm() {
+  const [isClick, setClick] = useState(false);
   const navigate = useNavigate();
   const {error, msg} = useSelector((state)=> state.contents)
   const dispatch = useDispatch();
@@ -34,14 +35,32 @@ function PostForm() {
 
   const onAddHandler = async (e) => {
     e.preventDefault();
+    if(content.content_title.trim()===""
+      ||content.content_body.trim()===""){
+        alert("공백을 체워주세요")
+        return
+      }
+    if(content.content_author.trim()===""){
+      content.content_author = "아무개"
+    }
     // if(!window.confirm("추가 하겠습니까?")){
     //   return 
     // } else {
     // }
     content.content_date = getFormatDate();
     await dispatch(__addcontents({ ...content }));
-    navigate("/")
+    setClick(true);
+    // console.log(msg)
+    // navigate("/")
   };
+
+  useEffect(()=>{
+    if(!isClick) return;
+    if(msg==="success"&&isClick) {
+      navigate("/")
+    }
+   alert(msg)
+  },[msg, isClick])
   // onClick={() => {
   //   if (!window.confirm("삭제하시겠습니까?")) {
   //     // 취소(아니오) 버튼 클릭 시 이벤트

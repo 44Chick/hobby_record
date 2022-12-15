@@ -2,18 +2,16 @@ import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate, useParams } from "react-router-dom"
-import styled, { ThemeProvider } from "styled-components"
+import styled from "styled-components"
 import {
   __getcontents,
   updateContent,
-  delContent2,
+  delContent,
 } from "../redux/modules/contentsSlice"
 import { DB } from "../redux/modules/contentsSlice"
 import Button from "../components/Button"
-import FormInput from "../components/FormInput"
-import theme from "../styles/theme"
-// import useInput from "../hooks/useInput"
 // import ReplyForm from "../components/ReplyForm"
+import FormInput from "../components/FormInput"
 
 function Detail() {
   // 상세페이지 보기 상태(true)인지 수정 상태(false)인지 결정
@@ -75,7 +73,7 @@ function Detail() {
   }
   if (renderStatus) {
     return (
-      <ThemeProvider theme={theme}>
+      <>
         <StDetailWrapper>
           <h1>상세 페이지</h1>
           <StDetail>
@@ -89,11 +87,10 @@ function Detail() {
                   } else {
                     // 확인(예) 버튼 클릭 시 이벤트
                     setContent(null)
-                    dispatch(delContent2(pageId))
+                    dispatch(delContent(pageId))
                     // onClickDelete(pageId)
                     // fetchActualDetail()
                     navigate("/") // 리렌더 안 됨
-                    // console.log(content.id, detailContent?.id)
                   }
                 }}
               >
@@ -120,11 +117,11 @@ function Detail() {
           </StDetail>
           <div>댓글란</div>
         </StDetailWrapper>
-      </ThemeProvider>
+      </>
     )
   } else {
     return (
-      <ThemeProvider theme={theme}>
+      <>
         <StDetailWrapper>
           <h1>상세 페이지</h1>
           <form
@@ -212,7 +209,7 @@ function Detail() {
           </form>
           <div>댓글란</div>
         </StDetailWrapper>
-      </ThemeProvider>
+      </>
     )
   }
 }
@@ -220,8 +217,11 @@ function Detail() {
 export default Detail
 
 const StDetailWrapper = styled.div`
-  ${({ theme }) => theme.common.flexCenterColumn}
   width: 98%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
   text-align: center;
   h4 {
     text-align: right;
