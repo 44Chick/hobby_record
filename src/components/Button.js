@@ -6,8 +6,8 @@ const StButton = styled.button`
   border-radius: 16px;
   background-color: ${({ theme }) => theme.azur.deep};
   color: white;
-  width: fit-content;
-  height: fit-content;
+  /* width: fit-content;
+  height: fit-content; */
   margin-right: 5px;
   font-size: medium;
   cursor: pointer;
@@ -19,7 +19,7 @@ const StButton = styled.button`
 
 const Button = (props) => {
   return (
-    <StButton type="button" className={props.className} onClick={props.onClick}>
+    <StButton className={props.className} onClick={props.onClick}>
       {props.children}
     </StButton>
   )

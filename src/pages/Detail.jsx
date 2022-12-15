@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import styled, { ThemeProvider } from "styled-components"
 import ReplyForm from "../components/ReplyForm"
+// import styled from "styled-components"
 import {
   __getcontents,
   updateContent,
@@ -12,10 +13,12 @@ import {
 } from "../redux/modules/contentsSlice"
 import { DB } from "../redux/modules/contentsSlice"
 import Button from "../components/Button"
-import FormInput from "../components/FormInput"
-import theme from "../styles/theme"
-// import useInput from "../hooks/useInput"
 // import ReplyForm from "../components/ReplyForm"
+import FormInput from "../components/FormInput"
+
+import FormWrap from "../components/FormWrap"
+
+import Input from "../components/Input"
 
 function Detail() {
   // 상세페이지 보기 상태(true)인지 수정 상태(false)인지 결정
@@ -58,6 +61,11 @@ function Detail() {
     navigate("/")
   }
 
+  const changeInput = (e) => {
+    const { name, value } = e.target;
+    setContent({ ...content, [name]: value });
+  };
+
   useEffect(() => {
     fetchActualDetail()
     dispatch(__getcontents())
@@ -83,143 +91,115 @@ function Detail() {
   }
   if (renderStatus) {
     return (
-      <ThemeProvider theme={theme}>
+      <>
         <StDetailWrapper>
-          <h1>상세 페이지</h1>
-          <StDetail>
-            <span>
-              작성일: {detailContent?.content_date}
-              <div className="buttonWrapper">
-                <Button onClick={() => setRenderStatus(false)}>수정</Button>
-                <Button
-                  onClick={(e) => {
-                    if (!window.confirm("삭제하시겠습니까?")) {
-                      // 취소(아니오) 버튼 클릭 시 이벤트
-                      return
-                    } else {
-                      // 확인(예) 버튼 클릭 시 이벤트
-                      onDeleteHandler(pageId)
-                    }
-                  }}
-                >
-                  삭제
-                </Button>
-              </div>
-            </span>
-            <h3>
-              {content.content_title}
-              <br />- - -
-            </h3>
-            <span>
-              장르: {content.content_genre}
-              <br />
-              {content.content_link}
-            </span>
-            <p>{content.content_body}</p>
-            <h4>작성자: {content.content_author}</h4>
-          </StDetail>
+          <DetailBox>
+            <div style={{ gridArea: "title" , fontSize:"24px"}}>제목 : {content.content_title}</div>
+            <div style={{ gridArea: "body" }}>{content.content_body}</div>
+            <div style={{ gridArea: "link" }}>링크 : {content.content_link}</div>
+            <div style={{ gridArea: "genre" }}> 장르 : {content.content_genre}</div>
+            <div style={{ gridArea: "author" }}>작성자 : {content.content_author}</div>
+            <BtnBox style={{ gridArea: "btn" }}>
+              <DeBtn onClick={() => setRenderStatus(false)}>fix</DeBtn>
+              <DeBtn onClick={(e) => {
+                if (!window.confirm("삭제하시겠습니까?")) {
+                  // 취소(아니오) 버튼 클릭 시 이벤트
+                  return
+                } else {
+                  // 확인(예) 버튼 클릭 시 이벤트
+                  onDeleteHandler(pageId)
+                }
+              }}>delete</DeBtn>
+            </BtnBox>
+            <div style={{ gridArea: "date" }}>{content.content_date}</div>
+          </DetailBox>
+          <br />
+          <br />
+          <br />
           <div>댓글란</div>
           <ReplyForm />
         </StDetailWrapper>
-      </ThemeProvider>
+      </>
     )
   } else {
     return (
-      <ThemeProvider theme={theme}>
+      <>
         <StDetailWrapper>
-          <h1>상세 페이지</h1>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault()
-              // dispatch(updateContent({ content }))
-              // fetchActualDetail()
-            }}
-          >
-            <StDetail>
-              <div className="buttonWrapper">
-                <span>{detailContent?.content_date}</span>
-                <Button
-                  onClick={() => {
-                    if (content.content_title.trim() === "") {
-                      alert("제목을 적어주세요.")
-                    } else if (content.content_body.trim() === "") {
-                      alert("내용을 적어주세요.")
-                    } else if (content.content_author.trim() === "") {
-                      alert("작성자명을 적어주세요.")
-                    } else {
-                      setContent({ content })
-                      onClickEditButton(pageId, content)
-                      setRenderStatus(true)
-                      fetchActualDetail()
-                    }
-                  }}
-                >
-                  확인
-                </Button>
-              </div>
-              <h3>
-                <FormInput
-                  defaultValue={content.content_title}
-                  onChange={(e) => {
-                    setContent({ ...content, content_title: e.target.value })
-                  }}
-                />
-                <br />- - -
-              </h3>
-              <p>
-                <textarea
-                  defaultValue={content.content_body}
-                  onChange={(e) => {
-                    setContent({ ...content, content_body: e.target.value })
-                  }}
-                />
-              </p>
-              <span>
-                링크:
-                <FormInput
-                  defaultValue={content.content_link}
-                  onChange={(e) => {
-                    setContent({ ...content, content_link: e.target.value })
-                  }}
-                />
-                &nbsp;
-                <label name="genre">장르: </label>
-                <select
-                  name="content_genre"
-                  onChange={(e) => {
-                    setContent({ ...content, content_genre: e.target.value })
-                  }}
-                  defaultValue={content.content_genre}
-                >
-                  <option>도서</option>
-                  <option>영화</option>
-                  <option>음악</option>
-                  <option>기타</option>
-                </select>
-              </span>
+          <FormBox method="post" onSubmit={() => {
+            if (content.content_title.trim() === "") {
+              alert("제목을 적어주세요.")
+            } else if (content.content_body.trim() === "") {
+              alert("내용을 적어주세요.")
+            } else if (content.content_author.trim() === "") {
+              alert("작성자명을 적어주세요.")
+            } else {
+              setContent({ content })
+              onClickEditButton(pageId, content)
+              setRenderStatus(true)
+              fetchActualDetail()
+            }
+          }}>
+            <FormInfo>추천글 수정</FormInfo>
+            <StTitle
+              required
+              type="text"
+              name="content_title"
+              defaultValue={content.content_title}
+              maxLength="15"
+              onChange={changeInput}
+              placeholder="제목 입력"
+            ></StTitle>
 
-              <h4>
-                {/* 작성자명 */}
-                <FormInput
-                  defaultValue={content.content_author}
-                  onChange={(e) => {
-                    setContent({ ...content, content_author: e.target.value })
-                  }}
-                />
-              </h4>
-            </StDetail>
-          </form>
+            <StGenre
+              name="content_genre"
+              required
+              onChange={changeInput}
+              defaultValue={content.content_genre}>
+              <option value="" hidden>
+                장르
+              </option>
+              <option value="book">도서</option>
+              <option value="movie">영화</option>
+              <option value="album">음악</option>
+              <option value="etc">기타</option>
+            </StGenre>
+
+            <StBody
+              required
+              name="content_body"
+              defaultValue={content.content_body}
+              onChange={changeInput}
+              placeholder="내용 입력"
+            ></StBody>
+
+            <StAuthor
+              type="text"
+              name="content_author"
+              defaultValue={content.content_author}
+              onChange={changeInput}
+              placeholder="당신 이름"
+            ></StAuthor>
+
+            <StLink
+              type="text"
+              name="content_link"
+              defaultValue={content.content_link}
+              onChange={changeInput}
+              placeholder="추천 링크"
+            ></StLink>
+
+            <StBtn>확인</StBtn>
+          </FormBox>
           <div>댓글란</div>
         </StDetailWrapper>
-      </ThemeProvider>
+      </>
     )
   }
 }
 
-export default Detail
+export default Detail;
 
 const StDetailWrapper = styled.div`
-  ${({ theme }) => theme.common.flexCenterColumn}
   width: 98%;
   display: flex;
   align-items: center;
@@ -267,4 +247,81 @@ const StDetail = styled.div`
     height: 40px;
     ${({ theme }) => theme.common.inputs};
   }
+`
+
+const FormBox = styled.form`
+  border: 2px solid ${({ theme }) => theme.azur.deep};
+  border-radius: 10px;
+  padding: 20px;
+  margin: auto;
+  font-size: 24px;
+  display: grid;
+  grid-template-areas:
+    "info info"
+    "title genre"
+    "body body"
+    "link link"
+    "author btn";
+  width: 800px;
+  height: 600px;
+  grid-auto-columns: 600px 100px;
+  grid-auto-rows: 50px 50px 200px 50px 50px;
+  justify-content: center;
+  gap : 30px;
+  box-shadow: 12px 12px 2px 1px ${({ theme }) => theme.azur.light};
+`
+const FormInfo = styled.div`
+  grid-area: info;
+  text-align: center;
+`
+
+const StTitle = styled(Input)`
+  grid-area: title;
+`
+const StGenre = styled.select`
+  grid-area: genre;
+`
+const StBody = styled.textarea`
+  padding: 10px;
+  grid-area: body;
+`
+const StLink = styled(Input)`
+  grid-area: link;
+`
+const StAuthor = styled(Input)`
+  grid-area: author;
+`
+const StBtn = styled(Button)`
+  grid-area: btn;
+`
+const DetailBox = styled.div`
+  border: 2px solid ${({ theme }) => theme.azur.deep};
+  border-radius: 10px;
+  padding: 20px;
+  margin: auto;
+  display: grid;
+  grid-template-areas:
+    "title genre"
+    "body body"
+    "link link"
+    "author author"
+    "date date"
+    "btn btn";
+  width: 800px;
+  height: 600px;
+  grid-auto-columns: 500px 200px;
+  grid-auto-rows: 50px 200px 20px 20px 20px 50px;
+  justify-content: center;
+  gap : 30px;
+  box-shadow: 12px 12px 2px 1px ${({ theme }) => theme.azur.light};
+`
+const BtnBox = styled.div`
+  text-align: center;
+`
+
+const DeBtn = styled(Button)`
+  grid-area: btn;
+  height: 50px;
+  width: 100px;
+  margin: 20px;
 `

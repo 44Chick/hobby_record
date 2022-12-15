@@ -1,10 +1,10 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {  useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { DB } from "../redux/modules/contentsSlice";
-import { addReply, __getReplys  } from "../redux/modules/replysSlice";
+import { addReply, __getReplys } from "../redux/modules/replysSlice";
 
 // function ReplyArea (props) {
 //   const [replyy, setReplyy] = useState(false);
@@ -14,7 +14,7 @@ import { addReply, __getReplys  } from "../redux/modules/replysSlice";
 //     reply_body: props.reply_body,
 //     reply_date: props.reply_date,
 //     content_id: props.content_id,
-//   }) 
+//   })
 
 //   function updateHandler(reply) {
 //     dispatch(__updateReplys(reply));
@@ -37,8 +37,8 @@ import { addReply, __getReplys  } from "../redux/modules/replysSlice";
 //         <div>{props.id}</div>
 //         <div>{props.reply_date}</div>
 //         <div>
-//           <textarea 
-//           defaultValue={props.reply_body} 
+//           <textarea
+//           defaultValue={props.reply_body}
 //           onchange={(e)=>{
 //             const {value} = e.target;
 //             setReply({
@@ -47,7 +47,7 @@ import { addReply, __getReplys  } from "../redux/modules/replysSlice";
 //             })
 //           }}
 //           />
-//           <button value="edit" 
+//           <button value="edit"
 //           onClick={()=>{
 //             setReplyy(false);
 //             updateHandler(reply);
@@ -118,83 +118,88 @@ const ReplyForm = () => {
   }
 
   return (
-    <Stmain>
-      {replyRender ? (
-        <form onSubmit={onSubmitReplyHandler}>
-          <input
-            type="text"
-            name="reply_body"
-            value={reply.reply_body}
-            onChange={changeReply}
-            placeholder="댓글을 남겨주세요"
-          />
-          <button>저장하기</button>
-          <div>
-            {replys?.map((reply) => {
-              if (reply.content_id === parseInt(prm.id)) {
-                return (
-                  <div key={reply.id}>
-                    ID:{reply.id} date:{reply.reply_date} = {reply.reply_body}
-                    <button type="button" onClick={() => setReplyRender(false)}>
-                      수정
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onClickDeleteReplyHandler(reply.id)}
-                    >
-                      삭제하기
-                    </button>
-                  </div>
-                );
-              } else {
-                return null;
-              }
-            })}
-          </div>
-        </form>
-      ) : (
-        <form onSubmit={onSubmitReplyHandler}>
-          <input
-            type="text"
-            name="reply_body"
-            value={reply.reply_body}
-            onChange={changeReply}
-            placeholder="댓글을 남겨주세요"
-          />
-          <button>저장하기</button>
-          <div>
-            {replys?.map((reply) => {
-              if (reply.content_id === parseInt(prm.id)) {
-                return (
-                  <div key={reply.id}>
-                    ID:{reply.id} date:{reply.reply_date} =
-                    <input type="text" defaultValue={reply.reply_body} />
-                    <button
-                      onClick={() => {
-                        if (reply.reply_body.trim() === "") {
-                          alert("내용을 입력해주세요.");
-                        } else {
-                          onClickEditReplyHandler(reply.id, reply.reply_body);
-                          setReplyRender(true);
-                        }
-                      }}
-                    >
-                      완료
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => onClickDeleteReplyHandler(reply.id)}
-                    >
-                      삭제하기
-                    </button>
-                  </div>
-                );
-              }
-            })}
-          </div>
-        </form>
-      )}
-    </Stmain>
+    <>
+      <FormBox>
+        {replyRender ? (
+          <form onSubmit={onSubmitReplyHandler}>
+            <input
+              type="text"
+              name="reply_body"
+              value={reply.reply_body}
+              onChange={changeReply}
+              placeholder="댓글을 남겨주세요"
+            />
+            <button>저장하기</button>
+            <div>
+              {replys?.map((reply) => {
+                if (reply.content_id === parseInt(prm.id)) {
+                  return (
+                    <div key={reply.id}>
+                      ID:{reply.id} date:{reply.reply_date} = {reply.reply_body}
+                      <button
+                        type="button"
+                        onClick={() => setReplyRender(false)}
+                      >
+                        수정
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onClickDeleteReplyHandler(reply.id)}
+                      >
+                        삭제하기
+                      </button>
+                    </div>
+                  );
+                } else {
+                  return null;
+                }
+              })}
+            </div>
+          </form>
+        ) : (
+          <form onSubmit={onSubmitReplyHandler}>
+            <input
+              type="text"
+              name="reply_body"
+              value={reply.reply_body}
+              onChange={changeReply}
+              placeholder="댓글을 남겨주세요"
+            />
+            <button>저장하기</button>
+            <div>
+              {replys?.map((reply) => {
+                if (reply.content_id === parseInt(prm.id)) {
+                  return (
+                    <div key={reply.id}>
+                      ID:{reply.id} date:{reply.reply_date} =
+                      <input type="text" defaultValue={reply.reply_body} />
+                      <button
+                        onClick={() => {
+                          if (reply.reply_body.trim() === "") {
+                            alert("내용을 입력해주세요.");
+                          } else {
+                            onClickEditReplyHandler(reply.id, reply.reply_body);
+                            setReplyRender(true);
+                          }
+                        }}
+                      >
+                        완료
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => onClickDeleteReplyHandler(reply.id)}
+                      >
+                        삭제하기
+                      </button>
+                    </div>
+                  );
+                }
+              })}
+            </div>
+          </form>
+        )}
+      </FormBox>
+    </>
   );
 };
 
@@ -209,4 +214,26 @@ const Stmain = styled.div`
   width: 600px;
   border: 4px solid ${({ theme }) => theme.azur.deep};
   border-radius: 16px;
+`;
+
+const FormBox = styled.form`
+  border: 2px solid ${({ theme }) => theme.azur.deep};
+  border-radius: 10px;
+  padding: 20px;
+  margin: auto;
+  font-size: 24px;
+  display: grid;
+  grid-template-areas:
+    "info info"
+    "title genre"
+    "body body"
+    "link link"
+    "author btn";
+  width: 800px;
+  height: 600px;
+  grid-auto-columns: 600px 100px;
+  grid-auto-rows: 50px 50px 200px 50px 50px;
+  justify-content: center;
+  gap: 30px;
+  box-shadow: 12px 12px 2px 1px ${({ theme }) => theme.azur.light};
 `;
