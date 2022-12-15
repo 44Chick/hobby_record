@@ -11,7 +11,7 @@ import {
 } from "../redux/modules/contentsSlice"
 import { DB } from "../redux/modules/contentsSlice"
 import Button from "../components/Button"
-// import ReplyForm from "../components/ReplyForm"
+import ReplyForm from "../components/ReplyForm"
 import FormInput from "../components/FormInput"
 
 import FormWrap from "../components/FormWrap"
@@ -60,9 +60,9 @@ function Detail() {
   }
 
   const changeInput = (e) => {
-    const { name, value } = e.target;
-    setContent({ ...content, [name]: value });
-  };
+    const { name, value } = e.target
+    setContent({ ...content, [name]: value })
+  }
 
   useEffect(() => {
     fetchActualDetail()
@@ -92,29 +92,42 @@ function Detail() {
       <>
         <StDetailWrapper>
           <DetailBox>
-            <div style={{ gridArea: "title" , fontSize:"24px"}}>제목 : {content.content_title}</div>
+            <div style={{ gridArea: "title", fontSize: "24px" }}>
+              제목 : {content.content_title}
+            </div>
             <div style={{ gridArea: "body" }}>{content.content_body}</div>
-            <div style={{ gridArea: "link" }}>링크 : {content.content_link}</div>
-            <div style={{ gridArea: "genre" }}> 장르 : {content.content_genre}</div>
-            <div style={{ gridArea: "author" }}>작성자 : {content.content_author}</div>
+            <div style={{ gridArea: "link" }}>
+              링크 : {content.content_link}
+            </div>
+            <div style={{ gridArea: "genre" }}>
+              {" "}
+              장르 : {content.content_genre}
+            </div>
+            <div style={{ gridArea: "author" }}>
+              작성자 : {content.content_author}
+            </div>
             <BtnBox style={{ gridArea: "btn" }}>
               <DeBtn onClick={() => setRenderStatus(false)}>fix</DeBtn>
-              <DeBtn onClick={(e) => {
-                if (!window.confirm("삭제하시겠습니까?")) {
-                  // 취소(아니오) 버튼 클릭 시 이벤트
-                  return
-                } else {
-                  // 확인(예) 버튼 클릭 시 이벤트
-                  onDeleteHandler(pageId)
-                }
-              }}>delete</DeBtn>
+              <DeBtn
+                onClick={(e) => {
+                  if (!window.confirm("삭제하시겠습니까?")) {
+                    // 취소(아니오) 버튼 클릭 시 이벤트
+                    return
+                  } else {
+                    // 확인(예) 버튼 클릭 시 이벤트
+                    onDeleteHandler(pageId)
+                  }
+                }}
+              >
+                delete
+              </DeBtn>
             </BtnBox>
             <div style={{ gridArea: "date" }}>{content.content_date}</div>
           </DetailBox>
           <br />
           <br />
           <br />
-          <div>댓글란</div>
+          <ReplyForm>댓글란</ReplyForm>
         </StDetailWrapper>
       </>
     )
@@ -122,20 +135,23 @@ function Detail() {
     return (
       <>
         <StDetailWrapper>
-          <FormBox method="post" onSubmit={() => {
-            if (content.content_title.trim() === "") {
-              alert("제목을 적어주세요.")
-            } else if (content.content_body.trim() === "") {
-              alert("내용을 적어주세요.")
-            } else if (content.content_author.trim() === "") {
-              alert("작성자명을 적어주세요.")
-            } else {
-              setContent({ content })
-              onClickEditButton(pageId, content)
-              setRenderStatus(true)
-              fetchActualDetail()
-            }
-          }}>
+          <FormBox
+            method="post"
+            onSubmit={() => {
+              if (content.content_title.trim() === "") {
+                alert("제목을 적어주세요.")
+              } else if (content.content_body.trim() === "") {
+                alert("내용을 적어주세요.")
+              } else if (content.content_author.trim() === "") {
+                alert("작성자명을 적어주세요.")
+              } else {
+                setContent({ content })
+                onClickEditButton(pageId, content)
+                setRenderStatus(true)
+                fetchActualDetail()
+              }
+            }}
+          >
             <FormInfo>추천글 수정</FormInfo>
             <StTitle
               required
@@ -144,14 +160,15 @@ function Detail() {
               defaultValue={content.content_title}
               maxLength="15"
               onChange={changeInput}
-              placeholder="제목 입력"
+              placeholder="제목"
             ></StTitle>
 
             <StGenre
               name="content_genre"
               required
               onChange={changeInput}
-              defaultValue={content.content_genre}>
+              defaultValue={content.content_genre}
+            >
               <option value="" hidden>
                 장르
               </option>
@@ -166,7 +183,7 @@ function Detail() {
               name="content_body"
               defaultValue={content.content_body}
               onChange={changeInput}
-              placeholder="내용 입력"
+              placeholder="내용"
             ></StBody>
 
             <StAuthor
@@ -174,7 +191,7 @@ function Detail() {
               name="content_author"
               defaultValue={content.content_author}
               onChange={changeInput}
-              placeholder="당신 이름"
+              placeholder="작성자명"
             ></StAuthor>
 
             <StLink
@@ -187,14 +204,14 @@ function Detail() {
 
             <StBtn>확인</StBtn>
           </FormBox>
-          <div>댓글란</div>
+          <ReplyForm>댓글란</ReplyForm>
         </StDetailWrapper>
       </>
     )
   }
 }
 
-export default Detail;
+export default Detail
 
 const StDetailWrapper = styled.div`
   width: 98%;
@@ -254,7 +271,7 @@ const FormBox = styled.form`
   grid-auto-columns: 600px 100px;
   grid-auto-rows: 50px 50px 200px 50px 50px;
   justify-content: center;
-  gap : 30px;
+  gap: 30px;
   box-shadow: 12px 12px 2px 1px ${({ theme }) => theme.azur.light};
 `
 const FormInfo = styled.div`
@@ -299,7 +316,7 @@ const DetailBox = styled.div`
   grid-auto-columns: 500px 200px;
   grid-auto-rows: 50px 200px 20px 20px 20px 50px;
   justify-content: center;
-  gap : 30px;
+  gap: 30px;
   box-shadow: 12px 12px 2px 1px ${({ theme }) => theme.azur.light};
 `
 const BtnBox = styled.div`
