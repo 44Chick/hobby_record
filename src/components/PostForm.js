@@ -90,16 +90,16 @@ function PostForm() {
           type="text"
           name="content_title"
           value={content.content_title}
-          maxLength="15"
+          maxLength="24"
           onChange={changeInput}
           placeholder="제목 입력"
         ></StTitle>
+
         <StGenre
           name="content_genre"
           required
           onChange={changeInput}
-          value={content.content_genre}
-        >
+          value={content.content_genre}>
           <option value="" hidden>
             장르
           </option>
@@ -108,6 +108,7 @@ function PostForm() {
           <option value="album">음악</option>
           <option value="etc">기타</option>
         </StGenre>
+
         <StBody
           required
           name="content_body"
@@ -115,6 +116,7 @@ function PostForm() {
           onChange={changeInput}
           placeholder="내용 입력"
         ></StBody>
+
         <StAuthor
           type="text"
           name="content_author"
@@ -122,6 +124,7 @@ function PostForm() {
           onChange={changeInput}
           placeholder="당신 이름"
         ></StAuthor>
+
         <StLink
           type="text"
           name="content_link"
@@ -129,6 +132,7 @@ function PostForm() {
           onChange={changeInput}
           placeholder="추천 링크"
         ></StLink>
+
         <StBtn onSubmit={onAddHandler}>확인</StBtn>
       </FormBox>
   );
@@ -155,6 +159,7 @@ const FormBox = styled.form`
   grid-auto-rows: 50px 50px 200px 50px 50px;
   justify-content: center;
   gap : 30px;
+  box-shadow: 12px 12px 2px 1px ${({ theme }) => theme.azur.light};
 `
 const FormInfo = styled.div`
   grid-area: info;
