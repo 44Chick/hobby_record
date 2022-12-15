@@ -92,6 +92,8 @@ const CardsBox = styled.div`
 
 const CardsLink = styled.div`
   height: 14px;
+  width: auto;
+  white-space:nowrap;
   text-overflow: ellipsis;
 `
 
