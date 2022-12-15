@@ -17,7 +17,7 @@ import replys from "../modules/replysSlice"
  */
 const store = configureStore({
   reducer: { contents: contents, replys: replys },
-  devTools: process.env.NODE_ENV === "production",
+  devTools: process.env.NODE_ENV !== "production",
 })
 
 export default store
