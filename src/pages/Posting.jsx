@@ -1,13 +1,18 @@
 import React from "react";
+import PostForm from "../components/PostForm";
+
+import styled from "styled-components";
+import theme from "../styles/theme";
 
 function Posting(){
-  console.log('posting')
-
   return(
-    <div>
-      <h1>Posting</h1>
-    </div>
+    <PostBody>
+      <PostForm />
+    </PostBody>
   )
 }
 
 export default Posting;
+
+const PostBody = styled.div`
+`
