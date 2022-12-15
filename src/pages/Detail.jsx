@@ -6,7 +6,6 @@ import styled from "styled-components"
 import {
   __getcontents,
   updateContent,
-  delContent2,
   __delcontent,
 } from "../redux/modules/contentsSlice"
 import { DB } from "../redux/modules/contentsSlice"

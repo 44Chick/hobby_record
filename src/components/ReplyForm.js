@@ -9,27 +9,55 @@ import { DB } from "../redux/modules/replysSlice"
 import Input from "./Input"
 import Button from "./Button"
 
+function getFormatDate() {
+  const date = new Date()
+  var year = date.getFullYear() //yyyy
+  var month = 1 + date.getMonth() //M
+  month = month >= 10 ? month : "0" + month //month 두자리로 저장
+  var day = date.getDate() //d
+  day = day >= 10 ? day : "0" + day //day 두자리로 저장
+  return year + "-" + month + "-" + day //'-' 추가하여 yyyy-mm-dd 형태 생성 가능
+}
+
 const ReplyForm = () => {
-  const [reply, setReply] = useState({
-    id: 0,
-    reply_body: "",
-    // reply_date: new Date(),
-    content_id: 0,
-  })
-  const dispatch = useDispatch()
   const prm = useParams()
   const prmId = parseInt(prm.id)
+  const [reply, setReply] = useState({})
+  const [oneReply, setOneReply] = useState({
+    id: 0,
+    reply_body: "",
+    reply_date: "2022-12-15",
+    content_id: 0,
+  })
+  const [newReply, setNewReply] = useState({
+    reply_body: "",
+    reply_date: "2022-12-15",
+    content_id: prmId,
+  })
+  const dispatch = useDispatch()
   const { isLoading, error, replys } = useSelector((state) => state.replys)
   // const detailReply = replys?.find((rep) => rep.content_id === parseInt(prm.id))
 
+  const fetchReplys = async () => {
+    // 전체 reply
+    const { data } = await axios.get(`${DB}/replys`)
+    setReply(data)
+  }
+
+  const fetchOneReply = async () => {
+    // content_id에 맞는 reply
+    const { data } = await axios.get(`${DB}/replys?content_id=${prmId}`)
+    setOneReply(data)
+  }
+
   const changeReply = (event) => {
     const { name, value } = event.target
-    setReply({ ...reply, [name]: value })
+    setNewReply({ ...newReply, [name]: value })
   }
 
   const onSubmitReplyHandler = (event) => {
     event.preventDefault()
-    dispatch(addReply({ ...reply }))
+    dispatch(addReply({ ...newReply }))
   }
 
   const onClickDeleteReplyHandler = (replyId) => {
@@ -44,6 +72,8 @@ const ReplyForm = () => {
 
   useEffect(() => {
     dispatch(__getReplys())
+    fetchReplys()
+    fetchOneReply()
   }, [dispatch])
 
   if (isLoading) {
@@ -60,7 +90,7 @@ const ReplyForm = () => {
         <ReInput
           type="text"
           name="reply_body"
-          value={replys.reply_body}
+          value={newReply.reply_body}
           onChange={changeReply}
           placeholder="댓글을 남겨주세요"
         />
@@ -69,28 +99,23 @@ const ReplyForm = () => {
       <br />
       <br />
       <ReList>
-        {replys?.map((reply) => {
-          if (reply.content_id === prmId) {
-            //   return (
+        {replys?.map((item) => {
+          if (item.content_id === prmId) {
             return (
-              <div key={reply.id}>
+              <div key={item.id}>
                 <ReElement>
-                <div>
-                  {replys?.reply_body}
-                </div>
-                <div>
-                  <Button type="button">수정하기</Button>
-                  <Button
-                    type="button"
-                    onClick={() => onClickDeleteReplyHandler(reply.id)}
-                  >
-                    삭제하기
-                  </Button>
-                </div>
+                  <div>{item.reply_body}</div>
+                  <div>
+                    {/* <Button type="button">수정하기</Button> */}
+                    <Button
+                      type="button"
+                      onClick={() => onClickDeleteReplyHandler(item.id)}
+                    >
+                      삭제하기
+                    </Button>
+                  </div>
                 </ReElement>
-                <div>
-                  date:{replys?.reply_date}
-                </div>
+                <div>date:{item.reply_date}</div>
               </div>
             )
           }
@@ -103,7 +128,7 @@ const ReplyForm = () => {
 export default ReplyForm
 
 const Stmain = styled.div`
-border-radius: 10px;
+  border-radius: 10px;
   border: 2px solid ${({ theme }) => theme.azur.deep};
   display: flex;
   align-items: center;
@@ -134,7 +159,7 @@ const ReBtn = styled(Button)`
 
 const ReList = styled.div`
   width: 600px;
-  margin:10px;
+  margin: 10px;
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -143,7 +168,7 @@ const ReList = styled.div`
 `
 
 const ReElement = styled.div`
-  border-bottom:2px solid ${({ theme }) => theme.azur.deep};
+  border-bottom: 2px solid ${({ theme }) => theme.azur.deep};
   padding: 5px;
   display: flex;
   flex-direction: row;
