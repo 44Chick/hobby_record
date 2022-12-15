@@ -38,12 +38,17 @@ const List = () => {
     }
   }
 
+  const linkHandler = (link, event) =>{
+    event.stopPropagation();
+    window.location.href = link; 
+  }
+
   useEffect(() => {
     dispatch(__getcontents());
   }, [dispatch]);
 
   if (isLoading) {
-    return <div>Loading....</div>;
+    return <div style={{textAlign:"center"}}>Loading....</div>;
   }
 
   if (error) {
@@ -63,7 +68,7 @@ const List = () => {
           <h3>{content.content_title}</h3>
           <CardsBody>{content.content_body}</CardsBody>
           <div>{content.content_author}</div>
-          <a href={content.content_link}>Link</a>
+          <div onClick={(event)=>{linkHandler(content.content_link, event)}}>{content.content_link}</div>
           <div>{content.content_date}</div>
           <CardsBtn>READ MORE</CardsBtn>
         </Cards>
@@ -123,6 +128,7 @@ const Cards = styled.div`
   text-overflow: ellipsis;
   margin: 20px;
   color: black;
+  box-shadow: 12px 12px 2px 1px ${({ theme }) => theme.azur.light};
   &:hover{
     background-color: ${({ theme }) => theme.azur.deep};
     color: white;

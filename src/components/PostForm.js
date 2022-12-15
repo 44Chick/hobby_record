@@ -155,6 +155,7 @@ const FormBox = styled.form`
   grid-auto-rows: 50px 50px 200px 50px 50px;
   justify-content: center;
   gap : 30px;
+  box-shadow: 12px 12px 2px 1px ${({ theme }) => theme.azur.light};
 `
 const FormInfo = styled.div`
   grid-area: info;

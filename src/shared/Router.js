@@ -3,11 +3,12 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "../pages/Home";
 import Detail from "../pages/Detail";
 import Posting from "../pages/Posting";
-// import Layout from "./Layout";
+import Layout from "./Layout";
 
 const Router = () => {
   return (
     <BrowserRouter>
+      <Layout>
         <Routes>
           <Route>
             <Route path="/" element={<Home />} />
@@ -15,6 +16,7 @@ const Router = () => {
             <Route path="posting" element={<Posting />} />
           </Route>
         </Routes>
+      </Layout>
     </BrowserRouter>
   );
 };

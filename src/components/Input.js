@@ -10,9 +10,11 @@ const StInput = styled.input`
 const Input = (props) => {
   return (
     <StInput 
+      name={props.name}
       required={props.required}
       placeholder={props.placeholder}
-      type="text" 
+      type="text"
+      maxLength={props.maxLength}
       className={props.className} 
       onChange={props.onChange}>
       {props.children}
