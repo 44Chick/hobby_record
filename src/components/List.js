@@ -79,7 +79,7 @@ const List = () => {
               linkHandler(content.content_link, event)
             }}
           >
-            {content.content_link}
+            <Link to={content.content_link}>보러 가기</Link>
           </CardsLink>
           <div>{content.content_date}</div>
           <CardsBtn>READ MORE</CardsBtn>
@@ -106,6 +106,9 @@ const CardsLink = styled.div`
   width: auto;
   white-space: nowrap;
   text-overflow: ellipsis;
+  a {
+    text-decoration: none;
+  }
 `
 
 const CardTitle = styled.div`

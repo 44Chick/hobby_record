@@ -94,7 +94,9 @@ function Detail() {
             <div style={{ gridArea: "title", fontSize: "24px" }}>
               제목 : {content.content_title}
             </div>
-            <div style={{ gridArea: "body" }}>{content.content_body}</div>
+            <div style={{ gridArea: "body", whiteSpace: "pre-line" }}>
+              {content.content_body}
+            </div>
             <div style={{ gridArea: "link" }}>
               링크 : {content.content_link}
             </div>
