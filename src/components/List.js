@@ -80,7 +80,6 @@ const List = () => {
 export default List;
 
 const CardsBox = styled.div`
-  height: 600px;
   width: auto;
   display: flex;
   gap: 20px;
