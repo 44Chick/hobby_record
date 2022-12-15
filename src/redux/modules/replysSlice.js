@@ -14,8 +14,7 @@ export const __getReplys = createAsyncThunk(
   async (payload, thunkAPI) => {
     // 콜백 함수
     try {
-      const data = await axios.get(`http://localhost:3001/replys`);
-      console.log(data);
+      const data = await axios.get(`${DB}/replys`);
       return thunkAPI.fulfillWithValue(data.data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
@@ -40,7 +39,7 @@ export const replysSlice = createSlice({
   initialState,
   reducers: {
     addReply: (state, action) => {
-      axios.post("http://localhost:3001/replys", action.payload);
+      axios.post(`${DB}/replys`, action.payload);
     },
   },
   extraReducers: {

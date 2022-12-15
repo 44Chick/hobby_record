@@ -83,6 +83,7 @@ function Detail() {
             <h4>작성일: {detailContent?.content_date}</h4>
           </StDetail>
           <div>댓글란</div>
+          <ReplyForm />
         </StDetailWrapper>
       </>
     )
@@ -137,6 +138,7 @@ function Detail() {
           </form>
           <div>댓글란</div>
         </StDetailWrapper>
+  
       </>
     )
   }
@@ -158,7 +160,7 @@ const StDetailWrapper = styled.div`
     text-align: right;
   }
   button {
-    position: absolute;
+    /* position: absolute; */
     top: 0;
     right: 0;
   }
