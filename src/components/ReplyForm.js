@@ -1,9 +1,14 @@
 import axios from "axios"
 import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useParams } from "react-router-dom"
+import { useParams, useNavigate } from "react-router-dom"
 import styled from "styled-components"
-import { addReply, __getReplys } from "../redux/modules/replysSlice"
+import {
+  addReply,
+  deleteReply,
+  __deleteReplys,
+  __getReplys,
+} from "../redux/modules/replysSlice"
 import { DB } from "../redux/modules/replysSlice"
 
 import Input from "./Input"
@@ -22,18 +27,26 @@ function getFormatDate() {
 const ReplyForm = () => {
   const prm = useParams()
   const prmId = parseInt(prm.id)
+  const navigate = useNavigate()
+
+  // 전체 reply
   const [reply, setReply] = useState({})
+
+  // content_id에 따른 reply
   const [oneReply, setOneReply] = useState({
     id: 0,
     reply_body: "",
     reply_date: "2022-12-15",
     content_id: 0,
   })
+
+  // 작성중인 reply 하나
   const [newReply, setNewReply] = useState({
     reply_body: "",
-    reply_date: "2022-12-15",
+    reply_date: getFormatDate(),
     content_id: prmId,
   })
+
   const dispatch = useDispatch()
   const { isLoading, error, replys } = useSelector((state) => state.replys)
   // const detailReply = replys?.find((rep) => rep.content_id === parseInt(prm.id))
@@ -58,11 +71,15 @@ const ReplyForm = () => {
   const onSubmitReplyHandler = (event) => {
     event.preventDefault()
     dispatch(addReply({ ...newReply }))
+    fetchReplys()
   }
 
   const onClickDeleteReplyHandler = (replyId) => {
-    axios.delete(`${DB}/replys/${replyId}`)
+    // await axios.delete(`${DB}/replys/${replyId}`)
+    dispatch(deleteReply(replyId))
     setReply({ ...reply })
+    fetchOneReply()
+    // navigate(`/detail/${prmId}`)
   }
 
   // const onClickEditReplyHandler = (replyId, edit) => {
@@ -73,7 +90,6 @@ const ReplyForm = () => {
   useEffect(() => {
     dispatch(__getReplys())
     fetchReplys()
-    fetchOneReply()
   }, [dispatch])
 
   if (isLoading) {

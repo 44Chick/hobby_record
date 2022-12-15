@@ -41,6 +41,11 @@ export const replysSlice = createSlice({
     addReply: (state, action) => {
       axios.post(`${DB}/replys`, action.payload)
     },
+    deleteReply: (state, action) => {
+      axios.delete(`${DB}/replys/${action.payload}`)
+      // console.log(current(state.contents), action)
+      state.contents = state.contents.filter((v) => v.id !== action.payload)
+    },
   },
   extraReducers: {
     [__getReplys.pending]: (state) => {
